@@ -84,24 +84,17 @@ cardiac-agent sensitivity --level sub_segment          # rank stability
 
 ## Verification
 
-The golden set passes 14 of 14, at 100 per cent on groundedness, tool recall,
-citation validity, content coverage and refusal accuracy. 150 tests pass, and
-the lint, slide geometry and house style checks are clean. Nothing is scored by
-another language model.
+14 of 14 golden questions pass, at 100 per cent on groundedness, citation
+validity and refusal accuracy, alongside 150 tests. Nothing is scored by another
+language model.
 
-```bash
-pytest
-python evaluation/run_eval.py
-python scripts/check_deck.py
-python scripts/check_prose.py
-```
+[How it is measured](docs/EVALUATION.md)
 
 <br>
 
 ## Licence
 
-MIT, covering the source code. See [LICENSE](LICENSE).
+MIT for the source code. The dataset and everything derived from it stay under
+the organisers' terms.
 
-The dataset and the case document are licensed material supplied by the
-organisers, excluded from version control, and everything derived from them
-carries their terms. [NOTICE](NOTICE) sets out the boundary.
+[LICENSE](LICENSE) · [NOTICE](NOTICE)
