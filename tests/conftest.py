@@ -33,9 +33,7 @@ def pytest_collection_modifyitems(config, items):
     if get_settings().warehouse_path.exists():
         return
 
-    skip_no_data = pytest.mark.skip(
-        reason="Warehouse not built; run `cardiac-agent build` first."
-    )
+    skip_no_data = pytest.mark.skip(reason="Warehouse not built; run `cardiac-agent build` first.")
     for item in items:
         if "requires_data" in item.keywords:
             item.add_marker(skip_no_data)
