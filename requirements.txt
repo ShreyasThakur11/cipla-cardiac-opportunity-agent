@@ -29,6 +29,10 @@ streamlit>=1.36,<2.0
 plotly>=5.22,<7.0
 
 # --- CLI + logging ---------------------------------------------------------
-typer>=0.12,<1.0
+# typer below 0.15 imports `get_terminal_size` from click.termui, which click
+# removed. Pinning the floor here keeps a fresh install from resolving a
+# combination that fails at import time.
+typer>=0.15,<1.0
+click>=8.1,<9.0
 rich>=13.7,<15.0
 structlog>=24.1,<26.0

@@ -15,6 +15,7 @@ the evaluation suite. Every command is safe to re-run.
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -31,7 +32,12 @@ app = typer.Typer(
     no_args_is_help=True,
     help="AI agent for prioritising opportunity spaces in the India Cardiac market.",
 )
-console = Console()
+
+# Rich falls back to an 80-column console when output is piped or redirected,
+# which squeezes the scorecard into unreadable two-character columns. A fixed
+# width keeps `cardiac-agent rank > file.txt` legible while still adapting to a
+# real terminal.
+console = Console(width=None if sys.stdout.isatty() else 150)
 
 
 def _console_table(title: str, rows: list[dict[str, Any]], columns: list[tuple[str, str]]) -> Table:
