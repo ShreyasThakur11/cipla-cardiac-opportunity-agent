@@ -1,6 +1,14 @@
+<div align="center">
+
 # Cardiac Opportunity Agent
 
+[![CI](https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent/actions/workflows/ci.yml)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-lightgrey.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%2B-lightgrey.svg)](pyproject.toml)
+
+</div>
+
+<br>
 
 An AI agent that reads the India Cardiac prescription audit, fuses it with a
 cited corpus of external signals, and ranks the opportunity spaces where Cipla
