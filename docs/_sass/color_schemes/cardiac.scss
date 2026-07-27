@@ -1,0 +1,33 @@
+// Cardiac Opportunity Agent colour scheme.
+//
+// just-the-docs imports the light scheme first and this one after it, so only
+// the variables that differ need restating. Setting them here rather than
+// overriding rules in custom.scss is what keeps the sidebar, the links, the
+// buttons and the search results consistent with each other.
+//
+// The palette is the one the charts are exported in, so a figure dropped into
+// a page belongs to the page.
+
+$ink: #1c2733; // headings and chart ink
+$priority: #1f6f6b; // a space worth pursuing
+$paper: #f3f6f6; // sidebar ground
+
+$body-background-color: #ffffff;
+$body-heading-color: $ink;
+$body-text-color: #35424f;
+
+$link-color: $priority;
+$nav-child-link-color: #4a5a6a;
+
+$sidebar-color: $paper;
+// Derived from $sidebar-color in the light scheme, so it has to be restated
+// here or the hover wash stays the old grey.
+$feedback-color: darken($paper, 3%);
+
+$base-button-color: #f4f6f6;
+$btn-primary-color: $priority;
+
+$code-background-color: #f6f8f8;
+$table-background-color: #ffffff;
+$search-background-color: #ffffff;
+$search-result-preview-color: #5b6b7a;

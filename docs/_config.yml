@@ -27,7 +27,9 @@ plugins:
   - jekyll-seo-tag
   - jekyll-include-cache
 
-color_scheme: light
+# Defined in _sass/color_schemes/cardiac.scss. Light ground, because the charts
+# are exported on white and invert badly.
+color_scheme: cardiac
 search_enabled: true
 search:
   heading_level: 3
@@ -46,9 +48,10 @@ back_to_top: true
 back_to_top_text: Back to top
 
 footer_content: >-
-  Built for Ascend Season 4. Figures are computed from the supplied Cardiac
-  prescription audit, MAT February 2026. The dataset itself is licensed
-  material and is not distributed with this site.
+  Shreyas Thakur and Amey Thakur. Built for Ascend Season 4. Figures are
+  computed from the supplied Cardiac prescription audit, MAT February 2026.
+  The dataset itself is licensed material and is not distributed with this
+  site.
 
 exclude:
   - assets/*.svg.license

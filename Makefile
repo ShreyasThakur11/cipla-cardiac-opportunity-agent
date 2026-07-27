@@ -47,6 +47,9 @@ visuals: ## Regenerate the charts into docs/assets
 deck: ## Rebuild both presentation decks
 	$(PYTHON) scripts/build_deck.py
 
+icons: ## Regenerate the site icons and the web manifest
+	$(PYTHON) scripts/build_favicon.py
+
 serve: ## Run the API on port 8000
 	cardiac-agent serve
 

@@ -1,18 +1,34 @@
-// Overrides layered on top of just-the-docs. This file is imported last by the
-// theme, so plain rules here win without touching the theme's own variables.
+// Overrides layered on top of just-the-docs, imported last by the theme.
 //
-// Scope is deliberately narrow: make the generated charts and the wider tables
-// behave on a small screen, and carry the palette used by the charts into the
-// site so the two do not look like separate projects.
+// Colour lives in _sass/color_schemes/cardiac.scss, not here. This file is only
+// for layout the theme gets wrong for this content: a long site title, charts
+// exported at a fixed size, and tables wider than a phone.
 
-$ink: #1c2733;
-$priority: #1f6f6b;
-$caution: #b4552d;
-$rule: #e3e7ea;
+// --- Site title ------------------------------------------------------------
+// The theme pins the sidebar header to $header-height and clips anything
+// taller. "Cardiac Opportunity Agent" wraps to three lines in a 16.5rem
+// sidebar, so the first line was being cut off. Let the header grow.
+.site-header {
+  @include mq(md) {
+    height: auto;
+    max-height: none;
+    min-height: $header-height;
+  }
+}
+
+.site-title {
+  height: auto;
+  line-height: 1.2;
+
+  @include mq(md) {
+    padding-top: $sp-4;
+    padding-bottom: $sp-4;
+  }
+}
 
 // --- Figures ---------------------------------------------------------------
 // Charts are exported at a fixed size for the deck. On the site they have to
-// scale down to the column, and on a phone to the screen.
+// scale to the column, and on a phone to the screen.
 .main-content {
   img {
     display: block;
@@ -21,48 +37,29 @@ $rule: #e3e7ea;
     margin: 1.5rem auto;
   }
 
-  // Charts read better with a defined edge against the page.
   img[src$=".svg"],
   img[src$=".png"] {
-    border: 1px solid $rule;
-    border-radius: 4px;
-    background: #fff;
     padding: 0.5rem;
+    background: #fff;
+    border: 1px solid $border-color;
+    border-radius: 4px;
   }
 
-  // A wide table scrolls inside its own box. The page itself must never
-  // scroll sideways.
+  // A wide table scrolls inside its own box. The page never scrolls sideways.
   table {
     display: block;
     width: fit-content;
     max-width: 100%;
     overflow-x: auto;
   }
-}
 
-// --- Palette ---------------------------------------------------------------
-.main-content a {
-  color: $priority;
-}
+  // Used to mark a caveat.
+  blockquote {
+    margin-left: 0;
+    padding-left: 1rem;
+    border-left: 3px solid #b4552d;
+  }
 
-.site-title:hover {
-  background-image: none;
-}
-
-.main-content h1,
-.main-content h2 {
-  color: $ink;
-}
-
-// Used in the docs to mark a caution or a caveat.
-.main-content blockquote {
-  border-left: 3px solid $caution;
-  padding-left: 1rem;
-  margin-left: 0;
-}
-
-// --- Reading comfort -------------------------------------------------------
-.main-content {
   p,
   li {
     line-height: 1.6;
@@ -75,7 +72,6 @@ $rule: #e3e7ea;
       margin: 1rem auto;
     }
 
-    // Long command lines should scroll rather than force the page wider.
     pre.highlight {
       overflow-x: auto;
     }
@@ -83,7 +79,7 @@ $rule: #e3e7ea;
 }
 
 // --- Print -----------------------------------------------------------------
-// The docs get printed for the panel. Drop the chrome and keep the content.
+// The docs get printed for the panel. Drop the chrome, keep the content.
 @media print {
   .side-bar,
   .main-header,

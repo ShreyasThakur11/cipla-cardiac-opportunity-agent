@@ -21,18 +21,13 @@ Integrated Trend Analytics*.
 
 The language model never calculates a number.
 
-Every figure comes from a deterministic engine written in ordinary Python. The
-model plans, calls tools, and writes prose over a finished evidence pack. A
-verifier then extracts every number from the draft and matches it against that
-pack. Anything untraceable is rejected and rewritten.
+Every figure comes from a deterministic engine. The model plans, calls tools,
+and writes prose over a finished evidence pack. A verifier then matches every
+number in the draft against that pack and rejects anything it cannot trace.
 
-Two consequences. The scorecard is reproducible byte for byte. And the system
-answers correctly with no API key, because the numbers were never the model's
-job.
-
-No analytical constant is hard-coded. Every weight, threshold and forecast
-assumption lives in `config/settings.yaml`, so a challenge to any assumption is
-answered by editing one number and re-running.
+So the scorecard is reproducible byte for byte, and the system answers correctly
+with no API key. Every weight and threshold lives in `config/settings.yaml`, so
+a challenge to any assumption is answered by editing one number.
 
 <br>
 
@@ -62,8 +57,8 @@ python -m venv .venv && .venv\Scripts\activate     # macOS/Linux: source .venv/b
 pip install -r requirements.txt && pip install -e .
 ```
 
-Copy the workbook to `data/raw/cardiac_dataset.xlsx`. It is excluded from
-version control by design; see [`data/raw/README.md`](data/raw/README.md).
+Copy the workbook to `data/raw/cardiac_dataset.xlsx`. It is licensed material
+and stays out of version control; see [`data/raw/README.md`](data/raw/README.md).
 
 ```bash
 cardiac-agent build
@@ -87,51 +82,31 @@ cardiac-agent sensitivity --level sub_segment          # rank stability
 cardiac-agent export                                   # CSV and JSON for the deck
 ```
 
-`POST /agent/ask` runs the reasoning loop and spends tokens. `/analytics/*`
-returns the same analysis in milliseconds for nothing. Interactive schema at
-`/docs`.
-
 <br>
 
 ## Verification
 
-```
-Golden question set                     Other gates
-──────────────────────────────          ──────────────────────
-pass rate          100.0%  (14/14)      150 tests passing
-groundedness       100.0%               ruff clean
-tool recall        100.0%               deck geometry clean
-citation validity  100.0%               house style clean
-content coverage   100.0%
-refusal accuracy   100.0%
-median latency        74 ms
-```
+The golden set passes 14 of 14, at 100 per cent on groundedness, tool recall,
+citation validity, content coverage and refusal accuracy. Alongside it, 150
+tests pass and the lint, slide geometry and house style checks are clean.
 
-The golden set covers all four case questions and the failure modes this system
-exists to prevent, including a trap question about a high-growth,
-originator-held space. Nothing is scored by another language model. Every
-measure is a deterministic assertion against the run.
+Nothing is scored by another language model. Every measure is a deterministic
+assertion against the run.
 
 ```bash
 pytest                            # 150 tests
 python evaluation/run_eval.py     # golden set
 python scripts/check_deck.py      # slide geometry
-python scripts/check_prose.py     # house style across every text file
+python scripts/check_prose.py     # house style
 ```
-
-<br>
-
-## Data confidentiality
-
-The Cardiac dataset and the case PDF are licensed material supplied by the
-organisers. They are excluded from version control and must not be committed.
-The build records a SHA-256 of the workbook, so any result ties back to the
-input that produced it.
 
 <br>
 
 ## Licence
 
-MIT, covering the source code only. See [LICENSE](LICENSE). The dataset and
-everything derived from it stay under the organisers' terms, which
-[NOTICE](NOTICE) sets out.
+MIT, covering the source code only. See [LICENSE](LICENSE).
+
+The Cardiac dataset and the case document are licensed material supplied by the
+organisers. They are excluded from version control, and everything derived from
+them carries their terms rather than the MIT grant. [NOTICE](NOTICE) sets out
+the boundary.
