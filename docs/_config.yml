@@ -48,10 +48,9 @@ back_to_top: true
 back_to_top_text: Back to top
 
 footer_content: >-
-  Shreyas Thakur and Amey Thakur. Built for Ascend Season 4. Figures are
-  computed from the supplied Cardiac prescription audit, MAT February 2026.
-  The dataset itself is licensed material and is not distributed with this
-  site.
+  Shreyas Thakur. Built for Ascend Season 4. Figures are computed from the
+  supplied Cardiac prescription audit, MAT February 2026. The dataset itself is
+  licensed material and is not distributed with this site.
 
 exclude:
   - assets/*.svg.license

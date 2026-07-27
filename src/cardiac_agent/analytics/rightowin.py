@@ -73,9 +73,7 @@ class FocalProfile:
                 continue
             bucket = self.brand_molecules.setdefault(root, set())
             bucket.update(
-                part.strip()
-                for part in str(row["molecule_canonical"]).split("+")
-                if part.strip()
+                part.strip() for part in str(row["molecule_canonical"]).split("+") if part.strip()
             )
 
         # Molecules covered by at least one existing umbrella brand.

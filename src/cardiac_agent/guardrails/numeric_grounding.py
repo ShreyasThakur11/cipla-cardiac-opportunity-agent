@@ -39,12 +39,12 @@ _NUMBER = re.compile(r"(?<![\w.])[-+]?\d{1,3}(?:,\d{3})+(?:\.\d+)?|(?<![\w.])[-+
 
 #: Numbers inside these constructs are structural, not factual claims.
 _STRIP_PATTERNS = (
-    re.compile(r"\[S-\d+\]"),          # citation markers
-    re.compile(r"\bhttps?://\S+"),     # URLs
+    re.compile(r"\[S-\d+\]"),  # citation markers
+    re.compile(r"\bhttps?://\S+"),  # URLs
     re.compile(r"\b[A-Z]\d{2}[A-Z]\d{2}[A-Z]?\b"),  # ATC codes such as C02F0O
     re.compile(r"\bMAT\s+\w+'?\d{2}\b", re.IGNORECASE),
     re.compile(r"\bFEB'\d{2}\b", re.IGNORECASE),
-    re.compile(r"\b(19|20)\d{2}\b"),   # calendar years
+    re.compile(r"\b(19|20)\d{2}\b"),  # calendar years
     # Named identifiers that end in a number: S-01, NFHS-5, COVID-19, Opus-5.
     # Without this the "5" in "NFHS-5" reads as an unsupported numeric claim.
     re.compile(r"\b[A-Za-z][A-Za-z]+-\d+(?:\.\d+)?\b"),
@@ -153,7 +153,9 @@ def check_numeric_grounding(
     """
     framework = get_framework()
     tol = float(
-        tolerance if tolerance is not None else framework.get_path("guardrails.numeric_tolerance", 0.02)
+        tolerance
+        if tolerance is not None
+        else framework.get_path("guardrails.numeric_tolerance", 0.02)
     )
     floor = float(
         ignore_below

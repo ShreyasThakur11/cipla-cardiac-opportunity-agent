@@ -57,36 +57,139 @@ def synthetic_skus() -> pd.DataFrame:
     rows = [
         # label, company, molecule, segment, sub-segment, group, subgroup,
         # v24, v25, v26, cp24, cp25, cp26, q24, q25, q26
-        ("BRAND-A", "CIPLA*", "TELMISARTAN", "Anti Hypertensives", "ARBs", "C02C ARB", "C02C04 TELMISARTAN",
-         80.0, 90.0, 100.0, 80.0, 88.0, 96.0, 800.0, 880.0, 950.0),
-        ("BRAND-B", "TORRENT*", "TELMISARTAN", "Anti Hypertensives", "ARBs", "C02C ARB", "C02C04 TELMISARTAN",
-         200.0, 240.0, 300.0, 200.0, 235.0, 280.0, 2000.0, 2300.0, 2700.0),
-        ("BRAND-C", "SUN*", "AMLODIPINE + TELMISARTAN", "Anti Hypertensives", "AHT Dual Comb.",
-         "C02F DUAL", "C02F06 AMLODIPINE+TELMISARTAN",
-         150.0, 190.0, 250.0, 150.0, 185.0, 240.0, 1500.0, 1850.0, 2350.0),
-        ("BRAND-D", "CIPLA*", "ROSUVASTATIN", "Lipid Regulators", "Statins Plain", "C10A STATINS",
-         "C10A04 ROSUVASTATIN",
-         100.0, 105.0, 108.0, 100.0, 102.0, 101.0, 1000.0, 1010.0, 1000.0),
-        ("BRAND-E", "LUPIN*", "ROSUVASTATIN", "Lipid Regulators", "Statins Plain", "C10A STATINS",
-         "C10A04 ROSUVASTATIN",
-         300.0, 330.0, 360.0, 300.0, 325.0, 350.0, 3000.0, 3250.0, 3500.0),
-        ("BRAND-F", "ZYDUS*", "EZETIMIBE + ROSUVASTATIN", "Lipid Regulators", "Statins Comb.",
-         "C10A STATINS", "C10A0S ROSUVASTATIN + EZETIMIBE",
-         10.0, 40.0, 120.0, 10.0, 38.0, 112.0, 100.0, 400.0, 1150.0),
+        (
+            "BRAND-A",
+            "CIPLA*",
+            "TELMISARTAN",
+            "Anti Hypertensives",
+            "ARBs",
+            "C02C ARB",
+            "C02C04 TELMISARTAN",
+            80.0,
+            90.0,
+            100.0,
+            80.0,
+            88.0,
+            96.0,
+            800.0,
+            880.0,
+            950.0,
+        ),
+        (
+            "BRAND-B",
+            "TORRENT*",
+            "TELMISARTAN",
+            "Anti Hypertensives",
+            "ARBs",
+            "C02C ARB",
+            "C02C04 TELMISARTAN",
+            200.0,
+            240.0,
+            300.0,
+            200.0,
+            235.0,
+            280.0,
+            2000.0,
+            2300.0,
+            2700.0,
+        ),
+        (
+            "BRAND-C",
+            "SUN*",
+            "AMLODIPINE + TELMISARTAN",
+            "Anti Hypertensives",
+            "AHT Dual Comb.",
+            "C02F DUAL",
+            "C02F06 AMLODIPINE+TELMISARTAN",
+            150.0,
+            190.0,
+            250.0,
+            150.0,
+            185.0,
+            240.0,
+            1500.0,
+            1850.0,
+            2350.0,
+        ),
+        (
+            "BRAND-D",
+            "CIPLA*",
+            "ROSUVASTATIN",
+            "Lipid Regulators",
+            "Statins Plain",
+            "C10A STATINS",
+            "C10A04 ROSUVASTATIN",
+            100.0,
+            105.0,
+            108.0,
+            100.0,
+            102.0,
+            101.0,
+            1000.0,
+            1010.0,
+            1000.0,
+        ),
+        (
+            "BRAND-E",
+            "LUPIN*",
+            "ROSUVASTATIN",
+            "Lipid Regulators",
+            "Statins Plain",
+            "C10A STATINS",
+            "C10A04 ROSUVASTATIN",
+            300.0,
+            330.0,
+            360.0,
+            300.0,
+            325.0,
+            350.0,
+            3000.0,
+            3250.0,
+            3500.0,
+        ),
+        (
+            "BRAND-F",
+            "ZYDUS*",
+            "EZETIMIBE + ROSUVASTATIN",
+            "Lipid Regulators",
+            "Statins Comb.",
+            "C10A STATINS",
+            "C10A0S ROSUVASTATIN + EZETIMIBE",
+            10.0,
+            40.0,
+            120.0,
+            10.0,
+            38.0,
+            112.0,
+            100.0,
+            400.0,
+            1150.0,
+        ),
     ]
     frame = pd.DataFrame(
         rows,
         columns=[
-            "BRANDS", "COMPANY", "MOLECULE_DESC", "CARDIAC SEGMENT", "CARDIAC SUB SEGMENTS",
-            "GROUP", "SUBGROUP",
-            "MAT FEB'24", "MAT FEB'25", "MAT FEB'26",
-            "MAT CP FEB'24", "MAT CP FEB'25", "MAT CP FEB'26",
-            "QTY MAT FEB'24", "QTY MAT FEB'25", "QTY MAT FEB'26",
+            "BRANDS",
+            "COMPANY",
+            "MOLECULE_DESC",
+            "CARDIAC SEGMENT",
+            "CARDIAC SUB SEGMENTS",
+            "GROUP",
+            "SUBGROUP",
+            "MAT FEB'24",
+            "MAT FEB'25",
+            "MAT FEB'26",
+            "MAT CP FEB'24",
+            "MAT CP FEB'25",
+            "MAT CP FEB'26",
+            "QTY MAT FEB'24",
+            "QTY MAT FEB'25",
+            "QTY MAT FEB'26",
         ],
     )
     frame["KEY(MS+SG+FINAL NFC)"] = frame["SUBGROUP"] + "SOLIDS"
-    frame["Plain/Combination"] = frame["MOLECULE_DESC"].str.contains(r"\+").map(
-        {True: "Combination", False: "Plain"}
+    frame["Plain/Combination"] = (
+        frame["MOLECULE_DESC"].str.contains(r"\+").map({True: "Combination", False: "Plain"})
     )
     frame["STRENGTH (ONLY 1 MOL.)"] = "10 MG"
     frame["PACK VOLUME"] = "0"
@@ -124,14 +227,18 @@ def synthetic_context(synthetic_skus, framework):
     company_facts = joined.groupby(
         ["level", "space_id", "space_label", "company_clean", "COMPANY"], as_index=False
     ).agg(value_t1=("value_t1", "sum"), value_t2=("value_t2", "sum"), is_mnc=("is_mnc", "max"))
-    totals = company_facts.groupby(["level", "space_id"], as_index=False)["value_t2"].sum().rename(
-        columns={"value_t2": "space_value_t2"}
+    totals = (
+        company_facts.groupby(["level", "space_id"], as_index=False)["value_t2"]
+        .sum()
+        .rename(columns={"value_t2": "space_value_t2"})
     )
     company_facts = company_facts.merge(totals, on=["level", "space_id"], how="left")
     company_facts["share_t2"] = company_facts["value_t2"] / company_facts["space_value_t2"]
-    company_facts["rank_in_space"] = company_facts.groupby(["level", "space_id"])["value_t2"].rank(
-        ascending=False, method="min"
-    ).astype(int)
+    company_facts["rank_in_space"] = (
+        company_facts.groupby(["level", "space_id"])["value_t2"]
+        .rank(ascending=False, method="min")
+        .astype(int)
+    )
 
     enriched = add_growth_metrics(spaces)
     enriched = add_competition_metrics(enriched, company_facts)

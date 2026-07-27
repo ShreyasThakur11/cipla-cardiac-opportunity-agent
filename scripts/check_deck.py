@@ -103,9 +103,12 @@ def check(path: Path) -> list[Issue]:
             if not is_background:
                 if shape.left < 0 or shape.top < 0 or right > SLIDE_W or bottom > SLIDE_H:
                     issues.append(
-                        Issue(number, "off-slide",
-                              f"{shape.shape_type} at ({shape.left/914400:.2f}, {shape.top/914400:.2f}) "
-                              f"extends to ({right/914400:.2f}, {bottom/914400:.2f})")
+                        Issue(
+                            number,
+                            "off-slide",
+                            f"{shape.shape_type} at ({shape.left / 914400:.2f}, {shape.top / 914400:.2f}) "
+                            f"extends to ({right / 914400:.2f}, {bottom / 914400:.2f})",
+                        )
                     )
                 elif (
                     shape.has_text_frame
@@ -113,9 +116,12 @@ def check(path: Path) -> list[Issue]:
                     and (shape.left < MIN_MARGIN or right > SLIDE_W - MIN_MARGIN)
                 ):
                     issues.append(
-                        Issue(number, "margin",
-                              f"text '{shape.text_frame.text[:34]}' is within "
-                              f"{MIN_MARGIN/914400:.2f}in of a side edge")
+                        Issue(
+                            number,
+                            "margin",
+                            f"text '{shape.text_frame.text[:34]}' is within "
+                            f"{MIN_MARGIN / 914400:.2f}in of a side edge",
+                        )
                     )
 
             if not shape.has_text_frame or not shape.text_frame.text.strip():
@@ -130,16 +136,22 @@ def check(path: Path) -> list[Issue]:
             ]
             if sizes and min(sizes) < MIN_FONT_PT:
                 issues.append(
-                    Issue(number, "font-size",
-                          f"'{text[:34]}' uses {min(sizes):.1f}pt, below the {MIN_FONT_PT}pt floor")
+                    Issue(
+                        number,
+                        "font-size",
+                        f"'{text[:34]}' uses {min(sizes):.1f}pt, below the {MIN_FONT_PT}pt floor",
+                    )
                 )
 
             estimated = _estimated_height(shape)
             if estimated > shape.height * 1.28:
                 issues.append(
-                    Issue(number, "overflow",
-                          f"'{text[:40]}' needs about {estimated/914400:.2f}in "
-                          f"but its box is {shape.height/914400:.2f}in")
+                    Issue(
+                        number,
+                        "overflow",
+                        f"'{text[:40]}' needs about {estimated / 914400:.2f}in "
+                        f"but its box is {shape.height / 914400:.2f}in",
+                    )
                 )
 
             text_shapes.append((shape, estimated))
@@ -147,7 +159,8 @@ def check(path: Path) -> list[Issue]:
         # Overlap between text boxes, using the estimated rendered height so a
         # box declared short but rendering tall is still caught.
         for index, (shape_a, height_a) in enumerate(text_shapes):
-            for shape_b, height_b in text_shapes[index + 1:]:
+            for shape_b, height_b in text_shapes[index + 1 :]:
+
                 class _Box:
                     pass
 
@@ -159,9 +172,12 @@ def check(path: Path) -> list[Issue]:
 
                 if _boxes_overlap(box_a, box_b):
                     issues.append(
-                        Issue(number, "overlap",
-                              f"'{shape_a.text_frame.text[:26]}' overlaps "
-                              f"'{shape_b.text_frame.text[:26]}'")
+                        Issue(
+                            number,
+                            "overlap",
+                            f"'{shape_a.text_frame.text[:26]}' overlaps "
+                            f"'{shape_b.text_frame.text[:26]}'",
+                        )
                     )
 
     return issues

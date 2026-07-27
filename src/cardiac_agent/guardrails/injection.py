@@ -52,9 +52,7 @@ class InjectionReport:
 
 def scan_for_injection(text: str, source: str = "") -> InjectionReport:
     """Look for instruction-shaped content in retrieved text."""
-    matches = [
-        pattern.pattern for pattern in INJECTION_PATTERNS if pattern.search(text or "")
-    ]
+    matches = [pattern.pattern for pattern in INJECTION_PATTERNS if pattern.search(text or "")]
     if matches:
         logger.warning("guardrail.injection.detected", source=source, patterns=matches[:3])
     return InjectionReport(clean=not matches, matches=matches, source=source)
@@ -76,11 +74,7 @@ def sanitise_retrieved_text(text: str, source: str = "corpus") -> str:
         for pattern in INJECTION_PATTERNS:
             cleaned = pattern.sub("[filtered: instruction-like content]", cleaned)
 
-    return (
-        f"{_ENVELOPE_OPEN.format(source=source)}\n"
-        f"{cleaned}\n"
-        f"{_ENVELOPE_CLOSE}"
-    )
+    return f"{_ENVELOPE_OPEN.format(source=source)}\n{cleaned}\n{_ENVELOPE_CLOSE}"
 
 
 __all__ = [

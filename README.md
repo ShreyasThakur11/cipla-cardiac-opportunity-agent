@@ -23,11 +23,10 @@ The language model never calculates a number.
 
 Every figure comes from a deterministic engine. The model plans, calls tools,
 and writes prose over a finished evidence pack. A verifier then matches every
-number in the draft against that pack and rejects anything it cannot trace.
+number in the draft against that pack and rejects what it cannot trace.
 
-So the scorecard is reproducible byte for byte, and the system answers correctly
-with no API key. Every weight and threshold lives in `config/settings.yaml`, so
-a challenge to any assumption is answered by editing one number.
+The scorecard is therefore reproducible byte for byte, and the system answers
+correctly with no API key.
 
 <br>
 
@@ -54,7 +53,7 @@ git clone https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent.git
 cd cipla-cardiac-opportunity-agent
 
 python -m venv .venv && .venv\Scripts\activate     # macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt && pip install -e .
+pip install -e .
 ```
 
 Copy the workbook to `data/raw/cardiac_dataset.xlsx`. It is licensed material
@@ -79,7 +78,6 @@ cardiac-agent serve                                    # REST API on :8000
 cardiac-agent rank --level molecule_combination        # scorecard
 cardiac-agent whitespace                               # underpenetrated spaces
 cardiac-agent sensitivity --level sub_segment          # rank stability
-cardiac-agent export                                   # CSV and JSON for the deck
 ```
 
 <br>
@@ -87,26 +85,23 @@ cardiac-agent export                                   # CSV and JSON for the de
 ## Verification
 
 The golden set passes 14 of 14, at 100 per cent on groundedness, tool recall,
-citation validity, content coverage and refusal accuracy. Alongside it, 150
-tests pass and the lint, slide geometry and house style checks are clean.
-
-Nothing is scored by another language model. Every measure is a deterministic
-assertion against the run.
+citation validity, content coverage and refusal accuracy. 150 tests pass, and
+the lint, slide geometry and house style checks are clean. Nothing is scored by
+another language model.
 
 ```bash
-pytest                            # 150 tests
-python evaluation/run_eval.py     # golden set
-python scripts/check_deck.py      # slide geometry
-python scripts/check_prose.py     # house style
+pytest
+python evaluation/run_eval.py
+python scripts/check_deck.py
+python scripts/check_prose.py
 ```
 
 <br>
 
 ## Licence
 
-MIT, covering the source code only. See [LICENSE](LICENSE).
+MIT, covering the source code. See [LICENSE](LICENSE).
 
-The Cardiac dataset and the case document are licensed material supplied by the
-organisers. They are excluded from version control, and everything derived from
-them carries their terms rather than the MIT grant. [NOTICE](NOTICE) sets out
-the boundary.
+The dataset and the case document are licensed material supplied by the
+organisers, excluded from version control, and everything derived from them
+carries their terms. [NOTICE](NOTICE) sets out the boundary.

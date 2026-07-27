@@ -18,7 +18,7 @@ The configuration that matters most, because it is the one that has to work in
 a room with a panel in it.
 
 ```bash
-pip install -r requirements.txt && pip install -e .
+pip install -e .
 cardiac-agent build
 cardiac-agent doctor
 streamlit run src/cardiac_agent/ui/streamlit_app.py
@@ -62,7 +62,7 @@ Four settings in `docs/_config.yml` are load-bearing:
 | `baseurl` | Must equal `/<repository>`. Wrong or missing, every theme-generated link 404s |
 | `remote_theme` | Pinned to a release. Tracking the default branch lets an upstream change break the site with no commit here to explain it |
 | `plugins` | The theme's sidebar uses `include_cached`, so `jekyll-include-cache` is required. Without it the build fails on an unknown tag |
-| `color_scheme` | Left light on purpose. The charts are exported on a white ground and invert badly |
+| `color_scheme` | `cardiac`, defined in `_sass/color_schemes/`. Light on purpose: the charts are exported on a white ground and invert badly |
 
 Two things break a Pages build quietly, and both are worth knowing before
 editing any page:
@@ -84,7 +84,7 @@ any address that does not resolve.
 ## Docker
 
 ```bash
-docker compose up --build
+docker compose -f deploy/docker-compose.yml up --build
 ```
 
 API on `http://localhost:8000`, console on `http://localhost:8501`. The `data/`
@@ -94,7 +94,7 @@ and the warehouse survives restarts.
 Build the warehouse inside the container:
 
 ```bash
-docker compose run --rm api cardiac-agent build
+docker compose -f deploy/docker-compose.yml run --rm api cardiac-agent build
 ```
 
 The image installs the package and runs as a non-root user. Model credentials

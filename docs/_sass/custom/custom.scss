@@ -5,10 +5,17 @@
 // exported at a fixed size, and tables wider than a phone.
 
 // --- Site title ------------------------------------------------------------
-// The theme pins the sidebar header to $header-height and clips anything
-// taller. "Cardiac Opportunity Agent" wraps to three lines in a 16.5rem
-// sidebar, so the first line was being cut off. Let the header grow.
+// "Cardiac Opportunity Agent" wraps to three lines in the sidebar and was
+// being cut off at the top. Two separate causes:
+//
+//   1. The theme pins the header to $header-height and clips what overflows.
+//   2. The sidebar is a fixed-height flex column, so even once the height was
+//      released the header was still shrunk below its own content.
+//
+// Releasing the height without also stopping the shrink leaves it cropped.
 .site-header {
+  flex-shrink: 0;
+
   @include mq(md) {
     height: auto;
     max-height: none;
@@ -21,9 +28,14 @@
   line-height: 1.2;
 
   @include mq(md) {
-    padding-top: $sp-4;
-    padding-bottom: $sp-4;
+    padding-top: $sp-3;
+    padding-bottom: $sp-3;
   }
+}
+
+// The nav absorbs the space the header now takes, and scrolls if it runs out.
+.site-nav {
+  min-height: 0;
 }
 
 // --- Figures ---------------------------------------------------------------

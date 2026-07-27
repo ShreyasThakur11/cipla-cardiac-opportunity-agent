@@ -42,22 +42,22 @@ class SensitivityResult:
 
     def summary(self, limit: int = 10) -> list[dict[str, Any]]:
         """Compact view for the agent's evidence pack."""
-        return (
-            self.stability.head(limit)[
-                [
-                    "space_id",
-                    "space_label",
-                    "level",
-                    "baseline_rank",
-                    "top_k_frequency",
-                    "mean_rank",
-                    "worst_rank",
-                ]
-            ].to_dict(orient="records")
-        )
+        return self.stability.head(limit)[
+            [
+                "space_id",
+                "space_label",
+                "level",
+                "baseline_rank",
+                "top_k_frequency",
+                "mean_rank",
+                "worst_rank",
+            ]
+        ].to_dict(orient="records")
 
 
-def _perturb(weights: dict[str, float], concentration: float, rng: np.random.Generator) -> dict[str, float]:
+def _perturb(
+    weights: dict[str, float], concentration: float, rng: np.random.Generator
+) -> dict[str, float]:
     """Draw a weight block from a Dirichlet centred on the configured values."""
     keys = list(weights)
     alpha = np.array([max(weights[k], 1e-6) * concentration for k in keys], dtype=float)
@@ -117,8 +117,7 @@ def run_sensitivity(
     baseline_frame = baseline.scored.sort_values(score_column, ascending=False)
     baseline_top = baseline_frame.head(top_k)["space_id"].tolist()
     baseline_ranks = {
-        row["space_id"]: int(index + 1)
-        for index, (_, row) in enumerate(baseline_frame.iterrows())
+        row["space_id"]: int(index + 1) for index, (_, row) in enumerate(baseline_frame.iterrows())
     }
 
     appearances: dict[str, int] = dict.fromkeys(baseline_ranks, 0)
@@ -184,6 +183,3 @@ def run_sensitivity(
 
 
 __all__ = ["SensitivityResult", "run_sensitivity"]
-
-
-

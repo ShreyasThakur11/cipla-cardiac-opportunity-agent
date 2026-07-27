@@ -93,7 +93,9 @@ def _membership_frame(frame: pd.DataFrame) -> pd.DataFrame:
     frame = frame.reset_index(drop=False).rename(columns={"index": "row_id"})
     blocks: list[pd.DataFrame] = []
 
-    def add(level: str, label: pd.Series, space_id: pd.Series, mask: pd.Series | None = None) -> None:
+    def add(
+        level: str, label: pd.Series, space_id: pd.Series, mask: pd.Series | None = None
+    ) -> None:
         block = pd.DataFrame(
             {
                 "row_id": frame["row_id"],
@@ -172,9 +174,15 @@ def _aggregate(frame: pd.DataFrame, membership: pd.DataFrame, periods: dict) -> 
     monthly = periods["monthly_sales"]
 
     measure_columns = [
-        value["t0"], value["t1"], value["t2"],
-        constant_price["t0"], constant_price["t1"], constant_price["t2"],
-        quantity["t0"], quantity["t1"], quantity["t2"],
+        value["t0"],
+        value["t1"],
+        value["t2"],
+        constant_price["t0"],
+        constant_price["t1"],
+        constant_price["t2"],
+        quantity["t0"],
+        quantity["t1"],
+        quantity["t2"],
         *monthly,
     ]
 
@@ -187,17 +195,29 @@ def _aggregate(frame: pd.DataFrame, membership: pd.DataFrame, periods: dict) -> 
     )
 
     rename = {
-        value["t0"]: "value_t0", value["t1"]: "value_t1", value["t2"]: "value_t2",
-        constant_price["t0"]: "cp_t0", constant_price["t1"]: "cp_t1", constant_price["t2"]: "cp_t2",
-        quantity["t0"]: "qty_t0", quantity["t1"]: "qty_t1", quantity["t2"]: "qty_t2",
+        value["t0"]: "value_t0",
+        value["t1"]: "value_t1",
+        value["t2"]: "value_t2",
+        constant_price["t0"]: "cp_t0",
+        constant_price["t1"]: "cp_t1",
+        constant_price["t2"]: "cp_t2",
+        quantity["t0"]: "qty_t0",
+        quantity["t1"]: "qty_t1",
+        quantity["t2"]: "qty_t2",
     }
     joined = joined.rename(columns=rename)
     joined["recent_3m_sales"] = joined[list(monthly)].sum(axis=1)
 
     metric_columns = [
-        "value_t0", "value_t1", "value_t2",
-        "cp_t0", "cp_t1", "cp_t2",
-        "qty_t0", "qty_t1", "qty_t2",
+        "value_t0",
+        "value_t1",
+        "value_t2",
+        "cp_t0",
+        "cp_t1",
+        "cp_t2",
+        "qty_t0",
+        "qty_t1",
+        "qty_t2",
         "recent_3m_sales",
     ]
 
@@ -237,9 +257,7 @@ def _aggregate(frame: pd.DataFrame, membership: pd.DataFrame, periods: dict) -> 
     return spaces
 
 
-def build_all_spaces(
-    frame: pd.DataFrame, periods: dict
-) -> tuple[pd.DataFrame, pd.DataFrame]:
+def build_all_spaces(frame: pd.DataFrame, periods: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Build every opportunity space and the SKU-to-space membership map.
 
     Args:
@@ -259,9 +277,7 @@ def build_all_spaces(
     logger.info(
         "spaces.built",
         spaces=len(spaces),
-        market_value_t2=float(
-            spaces.loc[spaces["level"] == "segment", "value_t2"].sum()
-        ),
+        market_value_t2=float(spaces.loc[spaces["level"] == "segment", "value_t2"].sum()),
     )
     return spaces, membership
 

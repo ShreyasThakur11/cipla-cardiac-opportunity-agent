@@ -44,9 +44,7 @@ class GuardrailOutcome:
                 "valid": self.citations.valid if self.citations else None,
                 "cited": self.citations.cited if self.citations else [],
                 "unknown": self.citations.unknown if self.citations else [],
-                "uncited_claim_count": len(self.citations.uncited_claims)
-                if self.citations
-                else 0,
+                "uncited_claim_count": len(self.citations.uncited_claims) if self.citations else 0,
             },
             "warnings": self.warnings,
         }

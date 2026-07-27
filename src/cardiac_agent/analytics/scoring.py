@@ -36,9 +36,7 @@ from ..logging_config import get_logger
 logger = get_logger(__name__)
 
 #: Metrics where a smaller raw value is better, so the percentile is flipped.
-INVERTED_METRICS: frozenset[str] = frozenset(
-    {"hhi", "leader_share", "crowding", "price_erosion"}
-)
+INVERTED_METRICS: frozenset[str] = frozenset({"hhi", "leader_share", "crowding", "price_erosion"})
 
 #: Source column for each configured metric name.
 METRIC_COLUMNS: dict[str, str] = {
@@ -119,9 +117,7 @@ def _percentile_score(series: pd.Series, *, invert: bool) -> pd.Series:
     return (100.0 - ranked) if invert else ranked
 
 
-def metric_percentiles(
-    frame: pd.DataFrame, framework: FrameworkConfig
-) -> pd.DataFrame:
+def metric_percentiles(frame: pd.DataFrame, framework: FrameworkConfig) -> pd.DataFrame:
     """Percentile-score every metric used by the framework.
 
     Split out from the weighted combination deliberately: percentiles do not
@@ -323,7 +319,7 @@ def build_scorecard(
     frame["rtw_band"] = np.select(
         [frame["right_to_win_score"] >= high, frame["right_to_win_score"] >= medium],
         ["Strong", "Moderate"],
-        default="Weak"
+        default="Weak",
     )
     # The strategic verdict falls straight out of the two-axis view. This is the
     # sentence the case asks for: double down, build, be selective, or avoid.
@@ -401,9 +397,7 @@ def explain_score(row: pd.Series) -> dict[str, Any]:
     Returned verbatim to the agent so a claim like "it scores well on future
     potential" can be traced to the specific percentile that produced it.
     """
-    pillars = {
-        pillar: round(float(row.get(f"pillar__{pillar}", 0.0)), 1) for pillar in PILLARS
-    }
+    pillars = {pillar: round(float(row.get(f"pillar__{pillar}", 0.0)), 1) for pillar in PILLARS}
     metrics: dict[str, dict[str, float]] = {}
     for key, value in row.items():
         if not isinstance(key, str) or not key.startswith("score__"):
@@ -429,5 +423,3 @@ __all__ = [
     "build_scorecard",
     "explain_score",
 ]
-
-

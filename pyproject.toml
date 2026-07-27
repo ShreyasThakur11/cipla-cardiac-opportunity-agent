@@ -12,8 +12,16 @@ license = { text = "MIT" }
 authors = [{ name = "Ascend Season 4 submission" }]
 keywords = ["pharma", "cardiac", "generative-ai", "agent", "rag", "market-prioritisation"]
 
+# Read from requirements.txt rather than restated here, so the two cannot drift.
+# Without this the package declared no dependencies at all, and `pip install .`
+# produced an installation that imported nothing.
+dynamic = ["dependencies"]
+
 [project.scripts]
 cardiac-agent = "cardiac_agent.cli:app"
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -50,6 +58,11 @@ ignore = ["E501"]
 "scripts/check_deck.py" = ["B008"]
 
 [tool.mypy]
-python_version = "3.10"
+# 3.12 rather than the 3.10 runtime floor above. numpy's bundled stubs use
+# `type` statements, which are 3.12 syntax, so a 3.10 target made mypy abort
+# with a syntax error while parsing them, before reaching any code in this
+# project. follow_imports does not help: the failure is at parse time. The
+# runtime floor is unaffected, and the image ships on 3.12.
+python_version = "3.12"
 ignore_missing_imports = true
 warn_unused_ignores = true

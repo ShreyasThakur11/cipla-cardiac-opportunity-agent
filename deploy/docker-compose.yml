@@ -1,37 +1,44 @@
 # Brings up the API and the Streamlit console from one image.
 #
-# Place the workbook in data/raw/ first, then:
-#   docker compose run --rm api cardiac-agent build
-#   docker compose up
+# Run from the repository root, where `make up` is the short form:
+#   docker compose -f deploy/docker-compose.yml run --rm api cardiac-agent build
+#   docker compose -f deploy/docker-compose.yml up
+#
+# The build context is the repository root, not this folder, so the Dockerfile
+# copies the same paths it always did. Bind mounts are relative to this file.
 #
 # data/ is bind-mounted so the warehouse survives a restart and the licensed
 # dataset never enters an image layer.
 
 services:
   api:
-    build: .
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
     image: cardiac-opportunity-agent:latest
     container_name: cardiac-api
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/app/data
-      - ./exports:/app/exports
-      - ./config:/app/config:ro
+      - ../data:/app/data
+      - ../exports:/app/exports
+      - ../config:/app/config:ro
     environment:
       CARDIAC_API_HOST: 0.0.0.0
       CARDIAC_API_PORT: "8000"
       CARDIAC_LOG_LEVEL: ${CARDIAC_LOG_LEVEL:-INFO}
       CARDIAC_CORS_ORIGINS: http://localhost:8501
-      # Defaults to deterministic mode. Set these in a .env file next to this
-      # compose file to enable the narrative layer.
+      # Defaults to deterministic mode. To enable the narrative layer, export
+      # these in the shell or pass --env-file pointing at the root .env.
       CARDIAC_LLM_PROVIDER: ${CARDIAC_LLM_PROVIDER:-none}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       CARDIAC_API_KEY: ${CARDIAC_API_KEY:-}
     restart: unless-stopped
 
   console:
-    build: .
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
     image: cardiac-opportunity-agent:latest
     container_name: cardiac-console
     depends_on:
@@ -39,9 +46,9 @@ services:
     ports:
       - "8501:8501"
     volumes:
-      - ./data:/app/data
-      - ./exports:/app/exports
-      - ./config:/app/config:ro
+      - ../data:/app/data
+      - ../exports:/app/exports
+      - ../config:/app/config:ro
     environment:
       CARDIAC_LOG_LEVEL: ${CARDIAC_LOG_LEVEL:-INFO}
       CARDIAC_LLM_PROVIDER: ${CARDIAC_LLM_PROVIDER:-none}

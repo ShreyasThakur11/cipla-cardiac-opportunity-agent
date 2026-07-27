@@ -129,7 +129,12 @@ def _short(label: str, limit: int = 34) -> str:
     text = text.replace("TELMIS", "Telmisartan").replace("SAROGLITAZAR", "Saroglitazar")
     # Drop the leading ATC code, which means nothing to a reader.
     parts = text.split(None, 1)
-    if parts and len(parts[0]) >= 5 and parts[0][0].isalpha() and any(c.isdigit() for c in parts[0]):
+    if (
+        parts
+        and len(parts[0]) >= 5
+        and parts[0][0].isalpha()
+        and any(c.isdigit() for c in parts[0])
+    ):
         text = parts[1] if len(parts) > 1 else text
     return text if len(text) <= limit else text[: limit - 1] + "…"
 
@@ -192,8 +197,11 @@ def chart_priority_matrix(context, level: str = "sub_segment") -> None:
 
     sizes = np.sqrt(frame["value_t2"].to_numpy()) * 4.2
     colours = [
-        PRIORITY if verdict in {"Double down", "Build capability"} else
-        CAUTION if verdict in {"Avoid or partner", "Harvest or exit"} else NEUTRAL
+        PRIORITY
+        if verdict in {"Double down", "Build capability"}
+        else CAUTION
+        if verdict in {"Avoid or partner", "Harvest or exit"}
+        else NEUTRAL
         for verdict in frame["strategic_verdict"]
     ]
     ax.scatter(
@@ -209,8 +217,14 @@ def chart_priority_matrix(context, level: str = "sub_segment") -> None:
 
     # Label only what a reader needs. Everything else is context.
     named = {
-        "Statins Comb.", "AHT Triple / Poly Comb.", "Oth. Lipid Red.",
-        "AHT Dual Comb.", "Statins Plain", "AHT Diuretic Comb.", "Fibrates", "ARBs",
+        "Statins Comb.",
+        "AHT Triple / Poly Comb.",
+        "Oth. Lipid Red.",
+        "AHT Dual Comb.",
+        "Statins Plain",
+        "AHT Diuretic Comb.",
+        "Fibrates",
+        "ARBs",
     }
     points = [
         (row["right_to_win_score"], row["market_opportunity_index"], _short(row["space_label"]))
@@ -220,8 +234,14 @@ def chart_priority_matrix(context, level: str = "sub_segment") -> None:
     _place_labels(ax, points, x_gap=13.0, y_gap=6.0)
 
     ax.text(71, 99, "Double down", fontsize=9, color=PRIORITY, weight="semibold")
-    ax.text(2, 99, "Attractive, but somebody else is positioned to win",
-            fontsize=9, color=CAUTION, weight="semibold")
+    ax.text(
+        2,
+        99,
+        "Attractive, but somebody else is positioned to win",
+        fontsize=9,
+        color=CAUTION,
+        weight="semibold",
+    )
 
     ax.set_xlabel("Right to win")
     ax.set_ylabel("Market opportunity")
@@ -247,16 +267,30 @@ def chart_top_spaces(context) -> None:
     y = np.arange(len(labels))
 
     fig, ax = plt.subplots(figsize=(9.2, 5.0))
-    ax.barh(y - 0.19, frame["market_opportunity_index"], 0.36, color=NEUTRAL, label="Market opportunity")
+    ax.barh(
+        y - 0.19, frame["market_opportunity_index"], 0.36, color=NEUTRAL, label="Market opportunity"
+    )
     ax.barh(y + 0.19, frame["cipla_priority_score"], 0.36, color=PRIORITY, label="Cipla priority")
 
     for index, (moi, cps, size) in enumerate(
-        zip(frame["market_opportunity_index"], frame["cipla_priority_score"], frame["value_t2"], strict=False)
+        zip(
+            frame["market_opportunity_index"],
+            frame["cipla_priority_score"],
+            frame["value_t2"],
+            strict=False,
+        )
     ):
         ax.annotate(f"{moi:.0f}", (moi + 1, index - 0.19), va="center", fontsize=8.5, color=MUTED)
-        ax.annotate(f"{cps:.0f}", (cps + 1, index + 0.19), va="center", fontsize=8.5, color=PRIORITY)
         ax.annotate(
-            f"{size:,.0f} cr", (2, index), va="center", fontsize=8.2, color="white", weight="semibold"
+            f"{cps:.0f}", (cps + 1, index + 0.19), va="center", fontsize=8.5, color=PRIORITY
+        )
+        ax.annotate(
+            f"{size:,.0f} cr",
+            (2, index),
+            va="center",
+            fontsize=8.2,
+            color="white",
+            weight="semibold",
         )
 
     ax.set_yticks(y)
@@ -337,7 +371,9 @@ def chart_cipla_position(context) -> None:
     labels = [_short(v) for v in frame["space_label"]]
     y = np.arange(len(labels))
 
-    fig, (left, right) = plt.subplots(1, 2, figsize=(11.4, 4.8), gridspec_kw={"width_ratios": [1, 1.1]})
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11.4, 4.8), gridspec_kw={"width_ratios": [1, 1.1]}
+    )
 
     left.barh(y, frame["focal_value_t2"], 0.62, color=NEUTRAL)
     for index, (value, share) in enumerate(
@@ -460,7 +496,9 @@ def chart_sensitivity(context) -> None:
     ax.set_yticks(y)
     ax.set_yticklabels(labels)
     ax.set_xlim(0, 1.12)
-    ax.set_xlabel(f"Share of {result.iterations} randomised weightings in which the space stayed top {result.top_k}")
+    ax.set_xlabel(
+        f"Share of {result.iterations} randomised weightings in which the space stayed top {result.top_k}"
+    )
     ax.set_title("Which conclusions survive a different framework")
     ax.annotate("robust", xy=(0.815, -0.62), fontsize=8.5, color=PRIORITY)
     ax.annotate("judgement call", xy=(0.2, -0.62), fontsize=8.5, color=CAUTION)
@@ -563,7 +601,9 @@ def chart_competitors(context) -> None:
     ax.barh(y, display["value_t2"], 0.62, color=colours)
     market_growth = context.totals["market_yoy"] * 100
 
-    for index, (value, growth) in enumerate(zip(display["value_t2"], display["growth"], strict=False)):
+    for index, (value, growth) in enumerate(
+        zip(display["value_t2"], display["growth"], strict=False)
+    ):
         ax.annotate(
             f"{value:,.0f} cr   {growth:+.1f}%",
             (value + 45, index),

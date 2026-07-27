@@ -135,10 +135,24 @@ class TestCompetitionMetrics:
         frame = _space()
         companies = pd.DataFrame(
             [
-                {"level": "sub_segment", "space_id": "TEST", "space_label": "Test space",
-                 "company_clean": "A", "value_t1": 50.0, "value_t2": 50.0, "is_mnc": False},
-                {"level": "sub_segment", "space_id": "TEST", "space_label": "Test space",
-                 "company_clean": "B", "value_t1": 50.0, "value_t2": 50.0, "is_mnc": False},
+                {
+                    "level": "sub_segment",
+                    "space_id": "TEST",
+                    "space_label": "Test space",
+                    "company_clean": "A",
+                    "value_t1": 50.0,
+                    "value_t2": 50.0,
+                    "is_mnc": False,
+                },
+                {
+                    "level": "sub_segment",
+                    "space_id": "TEST",
+                    "space_label": "Test space",
+                    "company_clean": "B",
+                    "value_t1": 50.0,
+                    "value_t2": 50.0,
+                    "is_mnc": False,
+                },
             ]
         )
         out = add_competition_metrics(add_growth_metrics(frame), companies)

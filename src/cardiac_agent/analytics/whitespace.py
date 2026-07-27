@@ -73,9 +73,9 @@ def find_whitespace(
 
     fair_share = focal_overall_share * criteria.penetration_ratio
 
-    has_route = (
-        frame["rtw_molecule_adjacency"] >= criteria.min_molecule_adjacency
-    ) | (frame["rtw_brand_franchise"] >= criteria.min_brand_franchise)
+    has_route = (frame["rtw_molecule_adjacency"] >= criteria.min_molecule_adjacency) | (
+        frame["rtw_brand_franchise"] >= criteria.min_brand_franchise
+    )
 
     qualifies = (
         (frame["market_opportunity_index"] >= criteria.min_moi)

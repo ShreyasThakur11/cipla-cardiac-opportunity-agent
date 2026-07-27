@@ -101,9 +101,7 @@ def _per_space(group: pd.DataFrame) -> pd.Series:
     )
 
 
-def add_competition_metrics(
-    spaces: pd.DataFrame, company_facts: pd.DataFrame
-) -> pd.DataFrame:
+def add_competition_metrics(spaces: pd.DataFrame, company_facts: pd.DataFrame) -> pd.DataFrame:
     """Attach competitive-structure metrics to the space frame.
 
     Args:
@@ -156,9 +154,13 @@ def top_competitors(
     if subset.empty:
         return subset
     subset["yoy"] = (
-        subset["value_t2"].divide(subset["value_t1"].where(subset["value_t1"].abs() > EPSILON))
-        - 1.0
-    ).replace([np.inf, -np.inf], np.nan).fillna(0.0)
+        (
+            subset["value_t2"].divide(subset["value_t1"].where(subset["value_t1"].abs() > EPSILON))
+            - 1.0
+        )
+        .replace([np.inf, -np.inf], np.nan)
+        .fillna(0.0)
+    )
     columns = ["company_clean", "value_t2", "share_t2", "yoy", "rank_in_space"]
     return subset.sort_values("value_t2", ascending=False).head(limit)[columns]
 

@@ -195,9 +195,7 @@ class AnthropicClient:
         usage = {
             "input_tokens": int(getattr(usage_obj, "input_tokens", 0) or 0),
             "output_tokens": int(getattr(usage_obj, "output_tokens", 0) or 0),
-            "cache_read_input_tokens": int(
-                getattr(usage_obj, "cache_read_input_tokens", 0) or 0
-            ),
+            "cache_read_input_tokens": int(getattr(usage_obj, "cache_read_input_tokens", 0) or 0),
         }
 
         logger.info(

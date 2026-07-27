@@ -109,9 +109,7 @@ def main() -> None:
     draw_mark(192).save(DOCS / "icon-192.png")
     draw_mark(512).save(DOCS / "icon-512.png")
 
-    (DOCS / "site.webmanifest").write_text(
-        json.dumps(MANIFEST, indent=2) + "\n", encoding="utf-8"
-    )
+    (DOCS / "site.webmanifest").write_text(json.dumps(MANIFEST, indent=2) + "\n", encoding="utf-8")
 
     for name in (
         "favicon.ico",

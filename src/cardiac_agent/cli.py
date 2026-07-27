@@ -274,7 +274,12 @@ def export(
     )
 
     console.print(f"[bold green]Exported to {destination}[/]")
-    for name in ("scorecard.csv", "excluded_spaces.csv", "company_facts.csv", "analysis_metadata.json"):
+    for name in (
+        "scorecard.csv",
+        "excluded_spaces.csv",
+        "company_facts.csv",
+        "analysis_metadata.json",
+    ):
         console.print(f"  {name}")
 
 
@@ -287,7 +292,9 @@ def doctor() -> None:
 
     console.print("[bold]Configuration[/]")
     console.print(f"  project root: {PROJECT_ROOT}")
-    console.print(f"  config file:  {settings.config_file} {'OK' if settings.config_file.exists() else 'MISSING'}")
+    console.print(
+        f"  config file:  {settings.config_file} {'OK' if settings.config_file.exists() else 'MISSING'}"
+    )
     if not settings.config_file.exists():
         ok = False
 
@@ -300,7 +307,9 @@ def doctor() -> None:
         ok = False
 
     warehouse = settings.warehouse_path
-    console.print(f"  warehouse: {warehouse} {'OK' if warehouse.exists() else 'NOT BUILT - run `cardiac-agent build`'}")
+    console.print(
+        f"  warehouse: {warehouse} {'OK' if warehouse.exists() else 'NOT BUILT - run `cardiac-agent build`'}"
+    )
     if not warehouse.exists():
         ok = False
 

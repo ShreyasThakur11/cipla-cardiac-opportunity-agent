@@ -175,9 +175,7 @@ def build_context(warehouse: Path | None = None) -> AnalysisContext:
 
     tables = _read_warehouse(path)
     metadata_frame = tables["build_metadata"]
-    metadata = {
-        str(row["key"]): json.loads(row["value"]) for _, row in metadata_frame.iterrows()
-    }
+    metadata = {str(row["key"]): json.loads(row["value"]) for _, row in metadata_frame.iterrows()}
 
     sku_facts = tables["sku_facts"]
     space_facts = tables["space_facts"]

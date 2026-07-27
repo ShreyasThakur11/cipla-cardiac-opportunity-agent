@@ -20,9 +20,7 @@ Level = Literal[
     "anchor_molecule",
 ]
 
-RankBy = Literal[
-    "cipla_priority_score", "market_opportunity_index", "value_t2", "value_yoy"
-]
+RankBy = Literal["cipla_priority_score", "market_opportunity_index", "value_t2", "value_yoy"]
 
 
 class AskRequest(BaseModel):

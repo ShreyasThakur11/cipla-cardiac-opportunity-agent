@@ -28,12 +28,15 @@ python -m venv .venv
 source .venv/bin/activate
 
 pip install --upgrade pip
-pip install -r requirements.txt
 pip install -e .
 ```
 
-`pip install -e .` puts the `cardiac-agent` command on your path. Without it,
-substitute `python -m cardiac_agent.cli` for `cardiac-agent` throughout.
+That one command is enough. The package reads its dependency list from
+`requirements.txt`, so there is no separate install step and no chance of the
+two lists drifting apart.
+
+`pip install -e .` also puts the `cardiac-agent` command on your path. Without
+it, substitute `python -m cardiac_agent.cli` for `cardiac-agent` throughout.
 
 ### Place the data
 
@@ -119,7 +122,7 @@ it has not been built, so the suite runs on a fresh clone.
 ## Docker
 
 ```bash
-docker compose up --build
+docker compose -f deploy/docker-compose.yml up --build
 ```
 
 Brings up the API on `http://localhost:8000` and the Streamlit console on
@@ -129,7 +132,7 @@ Brings up the API on `http://localhost:8000` and the Streamlit console on
 To build the warehouse inside the container:
 
 ```bash
-docker compose run --rm api cardiac-agent build
+docker compose -f deploy/docker-compose.yml run --rm api cardiac-agent build
 ```
 
 ---

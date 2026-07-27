@@ -1,9 +1,13 @@
 # Shortcuts for the common tasks. `make help` lists them.
 
 .DEFAULT_GOAL := help
-.PHONY: help install install-dev build doctor test eval lint format check visuals deck serve console export clean
+.PHONY: help install install-dev build doctor test eval lint format check visuals deck icons up down serve console export clean
 
 PYTHON ?= python
+
+# The compose file lives in deploy/ to keep the repository root short. Its build
+# context is the root, so this runs correctly from the root.
+COMPOSE ?= docker compose -f deploy/docker-compose.yml
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -29,13 +33,14 @@ test: ## Run the test suite
 eval: ## Run the golden question set in deterministic mode
 	CARDIAC_LLM_PROVIDER=none $(PYTHON) evaluation/run_eval.py
 
-lint: ## Check style and types
-	$(PYTHON) -m ruff check src tests evaluation
+lint: ## Check style, formatting and types
+	$(PYTHON) -m ruff check src tests evaluation scripts
+	$(PYTHON) -m ruff format --check src tests evaluation scripts
 	$(PYTHON) -m mypy src/cardiac_agent --ignore-missing-imports
 
 format: ## Apply formatting fixes
-	$(PYTHON) -m ruff check --fix src tests evaluation
-	$(PYTHON) -m ruff format src tests evaluation
+	$(PYTHON) -m ruff check --fix src tests evaluation scripts
+	$(PYTHON) -m ruff format src tests evaluation scripts
 
 check: ## Check slide geometry and prose style
 	$(PYTHON) scripts/check_deck.py
@@ -49,6 +54,12 @@ deck: ## Rebuild both presentation decks
 
 icons: ## Regenerate the site icons and the web manifest
 	$(PYTHON) scripts/build_favicon.py
+
+up: ## Start the API and console in Docker
+	$(COMPOSE) up --build
+
+down: ## Stop the Docker services
+	$(COMPOSE) down
 
 serve: ## Run the API on port 8000
 	cardiac-agent serve

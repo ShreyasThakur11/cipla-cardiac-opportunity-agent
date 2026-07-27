@@ -49,7 +49,8 @@ class TestScorecard:
             synthetic_context["enriched"], framework=framework, min_value_cr=0.0
         )
         assert (
-            result.scored["cipla_priority_score"] <= result.scored["market_opportunity_index"] + 1e-9
+            result.scored["cipla_priority_score"]
+            <= result.scored["market_opportunity_index"] + 1e-9
         ).all()
 
     def test_the_gate_punishes_weak_right_to_win(self, framework):

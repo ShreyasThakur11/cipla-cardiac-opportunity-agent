@@ -42,14 +42,52 @@ logger = get_logger(__name__)
 #: must reach `sensitivity` rather than being caught by the `rank` in
 #: `top_opportunities`.
 INTENT_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("sensitivity", re.compile(r"sensitiv|robust|how confident|what if.*weight|stability|hold up", re.I)),
-    ("underpenetration", re.compile(r"underpenetrat|under-penetrat|white ?space|absent|not present|below fair share", re.I)),
-    ("prioritisation", re.compile(r"prioriti[sz]|which (?:two|three|2|3|ones?)|should cipla (?:focus|invest|back)|double down", re.I)),
-    ("right_to_win", re.compile(r"right to win|compare(?:d)? with (?:key )?competitors?|competitive (?:strength|position)", re.I)),
-    ("strategic_implications", re.compile(r"strategic implication|where should (?:the company|cipla)|build capabilit|avoid|harvest|selective", re.I)),
-    ("forecast", re.compile(r"forecast|project|next (?:3|5|three|five)|outperform|over the next", re.I)),
-    ("top_opportunities", re.compile(r"top \d|best opportunit|which opportunit|identify.*opportunit|\brank\b", re.I)),
-    ("competitor", re.compile(r"\b(torrent|sun|usv|glenmark|mankind|lupin|zydus|macleods|intas|aristo|micro labs|emcure|alembic|dr\.? ?reddy|ipca|ajanta|eris|abbott|pfizer)\b", re.I)),
+    (
+        "sensitivity",
+        re.compile(r"sensitiv|robust|how confident|what if.*weight|stability|hold up", re.I),
+    ),
+    (
+        "underpenetration",
+        re.compile(
+            r"underpenetrat|under-penetrat|white ?space|absent|not present|below fair share", re.I
+        ),
+    ),
+    (
+        "prioritisation",
+        re.compile(
+            r"prioriti[sz]|which (?:two|three|2|3|ones?)|should cipla (?:focus|invest|back)|double down",
+            re.I,
+        ),
+    ),
+    (
+        "right_to_win",
+        re.compile(
+            r"right to win|compare(?:d)? with (?:key )?competitors?|competitive (?:strength|position)",
+            re.I,
+        ),
+    ),
+    (
+        "strategic_implications",
+        re.compile(
+            r"strategic implication|where should (?:the company|cipla)|build capabilit|avoid|harvest|selective",
+            re.I,
+        ),
+    ),
+    (
+        "forecast",
+        re.compile(r"forecast|project|next (?:3|5|three|five)|outperform|over the next", re.I),
+    ),
+    (
+        "top_opportunities",
+        re.compile(r"top \d|best opportunit|which opportunit|identify.*opportunit|\brank\b", re.I),
+    ),
+    (
+        "competitor",
+        re.compile(
+            r"\b(torrent|sun|usv|glenmark|mankind|lupin|zydus|macleods|intas|aristo|micro labs|emcure|alembic|dr\.? ?reddy|ipca|ajanta|eris|abbott|pfizer)\b",
+            re.I,
+        ),
+    ),
     ("space_detail", re.compile(r"tell me about|deep dive|explain|what is happening in", re.I)),
     ("overview", re.compile(r"overview|how big|market size|summar|landscape", re.I)),
 )
@@ -62,19 +100,31 @@ INTENT_PLANS: dict[str, list[tuple[str, dict[str, Any]]]] = {
     "overview": [("market_overview", {})],
     "top_opportunities": [
         ("market_overview", {}),
-        ("rank_opportunity_spaces", {"level": "molecule_combination", "rank_by": "market_opportunity_index", "top_n": 8}),
-        ("rank_opportunity_spaces", {"level": "sub_segment", "rank_by": "market_opportunity_index", "top_n": 6}),
+        (
+            "rank_opportunity_spaces",
+            {"level": "molecule_combination", "rank_by": "market_opportunity_index", "top_n": 8},
+        ),
+        (
+            "rank_opportunity_spaces",
+            {"level": "sub_segment", "rank_by": "market_opportunity_index", "top_n": 6},
+        ),
     ],
     "prioritisation": [
         ("market_overview", {}),
-        ("rank_opportunity_spaces", {"level": "molecule_combination", "rank_by": "cipla_priority_score", "top_n": 8}),
+        (
+            "rank_opportunity_spaces",
+            {"level": "molecule_combination", "rank_by": "cipla_priority_score", "top_n": 8},
+        ),
         ("cipla_portfolio", {}),
         ("sensitivity_analysis", {"level": "molecule_combination", "top_k": 5}),
     ],
     "right_to_win": [
         ("market_overview", {}),
         ("cipla_portfolio", {}),
-        ("rank_opportunity_spaces", {"level": "sub_segment", "rank_by": "cipla_priority_score", "top_n": 6}),
+        (
+            "rank_opportunity_spaces",
+            {"level": "sub_segment", "rank_by": "cipla_priority_score", "top_n": 6},
+        ),
     ],
     "underpenetration": [
         ("market_overview", {}),
@@ -83,12 +133,18 @@ INTENT_PLANS: dict[str, list[tuple[str, dict[str, Any]]]] = {
     ],
     "strategic_implications": [
         ("market_overview", {}),
-        ("rank_opportunity_spaces", {"level": "sub_segment", "rank_by": "cipla_priority_score", "top_n": 12}),
+        (
+            "rank_opportunity_spaces",
+            {"level": "sub_segment", "rank_by": "cipla_priority_score", "top_n": 12},
+        ),
         ("cipla_portfolio", {}),
     ],
     "forecast": [
         ("market_overview", {}),
-        ("rank_opportunity_spaces", {"level": "molecule_combination", "rank_by": "market_opportunity_index", "top_n": 6}),
+        (
+            "rank_opportunity_spaces",
+            {"level": "molecule_combination", "rank_by": "market_opportunity_index", "top_n": 6},
+        ),
     ],
     "sensitivity": [
         ("sensitivity_analysis", {"level": "molecule_combination", "top_k": 5}),
@@ -163,7 +219,11 @@ def plan_node(state: AgentState, context: AnalysisContext, **_: Any) -> str:
         "underpenetration",
         "strategic_implications",
         "forecast",
-    } or re.search(r"guideline|trend|external|policy|regulat|patent|epidemi|pollution|approval", state.question, re.I):
+    } or re.search(
+        r"guideline|trend|external|policy|regulat|patent|epidemi|pollution|approval",
+        state.question,
+        re.I,
+    ):
         plan.append(("retrieve_external_signals", {"query": state.question, "top_k": 5}))
 
     if state.intent == "competitor":
@@ -177,9 +237,7 @@ def plan_node(state: AgentState, context: AnalysisContext, **_: Any) -> str:
     return "gather"
 
 
-def _execute_tool(
-    spec: ToolSpec, arguments: dict[str, Any], state: AgentState
-) -> ToolInvocation:
+def _execute_tool(spec: ToolSpec, arguments: dict[str, Any], state: AgentState) -> ToolInvocation:
     """Run one tool and record the outcome, never raising into the graph."""
     started = time.perf_counter()
     try:
@@ -259,7 +317,9 @@ def gather_node(
             )
         except Exception as exc:  # noqa: BLE001 - fall back rather than fail
             logger.warning("agent.llm.failed", error=str(exc), iteration=iteration)
-            state.warnings.append(f"Model call failed ({type(exc).__name__}); answered deterministically.")
+            state.warnings.append(
+                f"Model call failed ({type(exc).__name__}); answered deterministically."
+            )
             state.deterministic = True
             return "synthesize"
 
@@ -272,7 +332,9 @@ def gather_node(
 
         if not response.wants_tools:
             state.draft = response.text
-            state.messages.append({"role": "assistant", "content": response.raw_content or response.text})
+            state.messages.append(
+                {"role": "assistant", "content": response.raw_content or response.text}
+            )
             return "verify" if state.draft.strip() else "synthesize"
 
         state.messages.append({"role": "assistant", "content": response.raw_content})
@@ -337,9 +399,7 @@ def _summarise_evidence(state: AgentState) -> str:
     return "\n\n".join(blocks) if blocks else "(no baseline evidence)"
 
 
-def synthesize_node(
-    state: AgentState, context: AnalysisContext, llm: LLMClient, **_: Any
-) -> str:
+def synthesize_node(state: AgentState, context: AnalysisContext, llm: LLMClient, **_: Any) -> str:
     """Write the answer, either with the model or from templates."""
     state.node_path.append("synthesize")
 
@@ -372,9 +432,7 @@ def synthesize_node(
     return "verify"
 
 
-def verify_node(
-    state: AgentState, context: AnalysisContext, llm: LLMClient, **_: Any
-) -> str:
+def verify_node(state: AgentState, context: AnalysisContext, llm: LLMClient, **_: Any) -> str:
     """Check the draft against the evidence; ask for one rewrite if it fails."""
     state.node_path.append("verify")
 

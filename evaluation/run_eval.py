@@ -160,7 +160,9 @@ def main() -> int:
         result = evaluate_case(agent, case)
         results.append(result)
         status = "PASS" if result.passed else "FAIL"
-        print(f"[{status}] {result.case_id}  {case['question'][:62]:<64} {result.latency_ms:7.0f} ms")
+        print(
+            f"[{status}] {result.case_id}  {case['question'][:62]:<64} {result.latency_ms:7.0f} ms"
+        )
         if not result.passed:
             for reason in result.failure_reasons:
                 print(f"         - {reason}")

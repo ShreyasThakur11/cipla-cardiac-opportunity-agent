@@ -166,7 +166,11 @@ with overview_tab:
             value_name="growth",
         )
         melted["measure"] = melted["measure"].map(
-            {"value_yoy": "Reported", "real_growth": "Real (constant price)", "volume_growth": "Volume"}
+            {
+                "value_yoy": "Reported",
+                "real_growth": "Real (constant price)",
+                "volume_growth": "Volume",
+            }
         )
         melted["growth"] = melted["growth"] * 100.0
         figure = px.bar(
@@ -328,9 +332,15 @@ with priority_tab:
                 "Leader share": st.column_config.NumberColumn(format="%.1f%%"),
                 "Cipla share": st.column_config.NumberColumn(format="%.2f%%"),
                 "MAT (₹ cr)": st.column_config.NumberColumn(format="%.0f"),
-                "Opportunity": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.1f"),
-                "Right to win": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.1f"),
-                "Priority": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.1f"),
+                "Opportunity": st.column_config.ProgressColumn(
+                    min_value=0, max_value=100, format="%.1f"
+                ),
+                "Right to win": st.column_config.ProgressColumn(
+                    min_value=0, max_value=100, format="%.1f"
+                ),
+                "Priority": st.column_config.ProgressColumn(
+                    min_value=0, max_value=100, format="%.1f"
+                ),
             },
             hide_index=True,
             use_container_width=True,
@@ -355,7 +365,9 @@ with priority_tab:
                     }
                 )[["Space", "Base rank", "In top 5", "Mean rank", "Worst rank"]],
                 column_config={
-                    "In top 5": st.column_config.ProgressColumn(min_value=0, max_value=1, format="%.2f")
+                    "In top 5": st.column_config.ProgressColumn(
+                        min_value=0, max_value=1, format="%.2f"
+                    )
                 },
                 hide_index=True,
                 use_container_width=True,
@@ -385,8 +397,12 @@ with deep_tab:
         metric_columns[0].metric("MAT value", f"₹{row['value_t2']:,.0f} cr", _pct(row["value_yoy"]))
         metric_columns[1].metric("Real demand growth", _pct(row["real_growth"]))
         metric_columns[2].metric("Volume growth", _pct(row["volume_growth"]))
-        metric_columns[3].metric("Concentration", f"HHI {row['hhi']:,.0f}", row["concentration_label"])
-        metric_columns[4].metric("Cipla share", _pct(row["focal_share_t2"]), f"{row['focal_share_delta_pp']:+.2f} pp")
+        metric_columns[3].metric(
+            "Concentration", f"HHI {row['hhi']:,.0f}", row["concentration_label"]
+        )
+        metric_columns[4].metric(
+            "Cipla share", _pct(row["focal_share_t2"]), f"{row['focal_share_delta_pp']:+.2f} pp"
+        )
 
         score_left, score_right = st.columns([1, 1])
         with score_left:
@@ -440,7 +456,9 @@ with deep_tab:
                 + ", ".join(signal_ids)
             )
         if row.get("adjacent_cipla_brands"):
-            st.caption(f"Adjacent Cipla brands that could be extended: {row['adjacent_cipla_brands']}")
+            st.caption(
+                f"Adjacent Cipla brands that could be extended: {row['adjacent_cipla_brands']}"
+            )
 
 # ------------------------------------------------------- whitespace/forecast
 

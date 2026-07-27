@@ -40,13 +40,44 @@ _TOKEN = re.compile(r"[a-z0-9]+")
 #: Words too common in this corpus to discriminate between signals.
 STOPWORDS: frozenset[str] = frozenset(
     [
-        "a", "an", "and", "are", "as", "at", "be", "been", "but", "by",
-        "for", "from", "has", "have", "in", "into", "is", "it", "its",
-        "of", "on", "or", "that", "the", "their", "there", "these",
-        "this", "to", "was", "were", "which", "will", "with",
+        "a",
+        "an",
+        "and",
+        "are",
+        "as",
+        "at",
+        "be",
+        "been",
+        "but",
+        "by",
+        "for",
+        "from",
+        "has",
+        "have",
+        "in",
+        "into",
+        "is",
+        "it",
+        "its",
+        "of",
+        "on",
+        "or",
+        "that",
+        "the",
+        "their",
+        "there",
+        "these",
+        "this",
+        "to",
+        "was",
+        "were",
+        "which",
+        "will",
+        "with",
         # Corpus-specific: every signal document carries a "Why this matters
         # for prioritisation" heading, so these carry no discriminating signal.
-        "why", "matters",
+        "why",
+        "matters",
     ]
 )
 
@@ -188,9 +219,7 @@ class SignalRetriever:
         framework = get_framework()
         # Config is expressed in tokens; words are close enough for chunking and
         # avoid pulling in a tokeniser dependency for a few dozen documents.
-        self.chunk_words = int(
-            chunk_words or framework.get_path("rag.chunk_tokens", 320) * 0.75
-        )
+        self.chunk_words = int(chunk_words or framework.get_path("rag.chunk_tokens", 320) * 0.75)
         self.overlap_words = int(
             overlap_words or framework.get_path("rag.chunk_overlap_tokens", 60) * 0.75
         )
@@ -264,11 +293,14 @@ class SignalRetriever:
                 term_freq = counts.get(term, 0)
                 if term_freq == 0:
                     continue
-                length_norm = 1.0 - BM25_B + BM25_B * (
-                    self._lengths[index] / self._avg_length if self._avg_length else 1.0
+                length_norm = (
+                    1.0
+                    - BM25_B
+                    + BM25_B
+                    * (self._lengths[index] / self._avg_length if self._avg_length else 1.0)
                 )
-                scores[index] += idf * (term_freq * (BM25_K1 + 1.0)) / (
-                    term_freq + BM25_K1 * length_norm
+                scores[index] += (
+                    idf * (term_freq * (BM25_K1 + 1.0)) / (term_freq + BM25_K1 * length_norm)
                 )
         ranked = sorted(enumerate(scores), key=lambda pair: pair[1], reverse=True)
         return [pair for pair in ranked[:top_k] if pair[1] > 0.0]

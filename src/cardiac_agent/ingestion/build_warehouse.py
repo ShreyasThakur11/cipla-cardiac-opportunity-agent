@@ -46,9 +46,7 @@ def _file_digest(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _company_facts(
-    frame: pd.DataFrame, membership: pd.DataFrame, periods: dict
-) -> pd.DataFrame:
+def _company_facts(frame: pd.DataFrame, membership: pd.DataFrame, periods: dict) -> pd.DataFrame:
     """Value by company within every space - the input to concentration metrics."""
     value = periods["value"]
     facts = frame.reset_index(drop=False).rename(columns={"index": "row_id"})
@@ -63,23 +61,26 @@ def _company_facts(
         ["level", "space_id", "space_label", "company_clean", "COMPANY"], as_index=False
     ).agg(value_t1=("value_t1", "sum"), value_t2=("value_t2", "sum"), is_mnc=("is_mnc", "max"))
 
-    totals = grouped.groupby(["level", "space_id"], as_index=False)["value_t2"].sum().rename(
-        columns={"value_t2": "space_value_t2"}
+    totals = (
+        grouped.groupby(["level", "space_id"], as_index=False)["value_t2"]
+        .sum()
+        .rename(columns={"value_t2": "space_value_t2"})
     )
     grouped = grouped.merge(totals, on=["level", "space_id"], how="left")
     grouped["share_t2"] = (
-        grouped["value_t2"].divide(grouped["space_value_t2"].where(grouped["space_value_t2"] != 0))
+        grouped["value_t2"]
+        .divide(grouped["space_value_t2"].where(grouped["space_value_t2"] != 0))
         .fillna(0.0)
     )
-    grouped["rank_in_space"] = grouped.groupby(["level", "space_id"])["value_t2"].rank(
-        ascending=False, method="min"
-    ).astype(int)
+    grouped["rank_in_space"] = (
+        grouped.groupby(["level", "space_id"])["value_t2"]
+        .rank(ascending=False, method="min")
+        .astype(int)
+    )
     return grouped
 
 
-def _brand_facts(
-    frame: pd.DataFrame, membership: pd.DataFrame, periods: dict
-) -> pd.DataFrame:
+def _brand_facts(frame: pd.DataFrame, membership: pd.DataFrame, periods: dict) -> pd.DataFrame:
     """Value by brand within every space - used for competitor and franchise views."""
     value = periods["value"]
     facts = frame.reset_index(drop=False).rename(columns={"index": "row_id"})
@@ -95,15 +96,15 @@ def _brand_facts(
         as_index=False,
     ).agg(value_t1=("value_t1", "sum"), value_t2=("value_t2", "sum"))
     grouped = grouped.rename(columns={"BRANDS": "brand"})
-    grouped["rank_in_space"] = grouped.groupby(["level", "space_id"])["value_t2"].rank(
-        ascending=False, method="min"
-    ).astype(int)
+    grouped["rank_in_space"] = (
+        grouped.groupby(["level", "space_id"])["value_t2"]
+        .rank(ascending=False, method="min")
+        .astype(int)
+    )
     return grouped
 
 
-def build_warehouse(
-    workbook: Path | None = None, warehouse: Path | None = None
-) -> dict[str, Any]:
+def build_warehouse(workbook: Path | None = None, warehouse: Path | None = None) -> dict[str, Any]:
     """Run the full ingestion pipeline and persist the warehouse.
 
     Args:
@@ -188,9 +189,11 @@ def build_warehouse(
         json.dumps(metadata, indent=2), encoding="utf-8"
     )
 
-    logger.info("warehouse.built", destination=str(destination), **{
-        k: v for k, v in metadata.items() if k not in {"source_sha256", "config_file"}
-    })
+    logger.info(
+        "warehouse.built",
+        destination=str(destination),
+        **{k: v for k, v in metadata.items() if k not in {"source_sha256", "config_file"}},
+    )
     return metadata
 
 

@@ -124,7 +124,9 @@ class CardiacAgent:
             node = next_node
 
         if transitions >= MAX_TRANSITIONS:
-            state.warnings.append("Graph hit its transition limit; returned the best answer available.")
+            state.warnings.append(
+                "Graph hit its transition limit; returned the best answer available."
+            )
 
         # finalise is reached by falling out of the loop rather than by an edge,
         # so that every path - including refusals - passes through it.
@@ -137,7 +139,11 @@ class CardiacAgent:
                 "sub-segment, molecule or competitor."
             )
 
-        cited_ids = set(state.guardrails.citations.cited) if state.guardrails and state.guardrails.citations else set()
+        cited_ids = (
+            set(state.guardrails.citations.cited)
+            if state.guardrails and state.guardrails.citations
+            else set()
+        )
         citations = [
             citation
             for citation in self.context.citations()

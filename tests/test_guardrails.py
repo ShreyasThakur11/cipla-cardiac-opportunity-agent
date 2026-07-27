@@ -61,9 +61,7 @@ class TestNumericGrounding:
     def test_ignores_atc_codes(self):
         """C02F0O is an identifier, not a numeric claim."""
         evidence = {"tool": {"value_cr": 759.4}}
-        report = check_numeric_grounding(
-            "C02F0O is worth 759.4 crore.", evidence
-        )
+        report = check_numeric_grounding("C02F0O is worth 759.4 crore.", evidence)
         assert report.passed, report.ungrounded
 
     def test_ignores_small_incidental_numbers(self):

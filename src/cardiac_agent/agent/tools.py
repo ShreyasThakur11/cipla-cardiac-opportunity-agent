@@ -283,9 +283,7 @@ def space_deep_dive(
             "new_entrants": int(row["new_entrant_count"]),
             "crowding_players_per_100cr": round(float(row["crowding"]), 2),
             "top_companies": _percentify(_round_frame(competitors)),
-            "top_brands": _round_frame(
-                brands[["brand", "company_clean", "value_t2", "value_t1"]]
-            ),
+            "top_brands": _round_frame(brands[["brand", "company_clean", "value_t2", "value_t1"]]),
         },
         "cipla_position": {
             "value_cr": round(float(row["focal_value_t2"]), 2),
@@ -302,7 +300,9 @@ def space_deep_dive(
         },
         "external_signals": {
             "trend_multiplier": round(float(row["trend_multiplier"]), 3),
-            "signal_ids": str(row.get("trend_signal_ids", "")).split(",") if row.get("trend_signal_ids") else [],
+            "signal_ids": str(row.get("trend_signal_ids", "")).split(",")
+            if row.get("trend_signal_ids")
+            else [],
             "links": signals,
         },
         "scores": explain_score(row),
@@ -406,12 +406,8 @@ def competitor_profile(context: AnalysisContext, company: str) -> dict[str, Any]
         "company": resolved,
         "currency_unit": context.currency_unit,
         "cardiac_value_cr": round(total_value, 1),
-        "cardiac_share_pct": round(
-            100.0 * total_value / context.totals["market_value_t2"], 2
-        ),
-        "growth_pct": round(
-            (total_value / total_prior - 1.0) * 100.0 if total_prior else 0.0, 2
-        ),
+        "cardiac_share_pct": round(100.0 * total_value / context.totals["market_value_t2"], 2),
+        "growth_pct": round((total_value / total_prior - 1.0) * 100.0 if total_prior else 0.0, 2),
         "strongholds": _percentify(_round_frame(strongholds)),
         "top_brands": _round_frame(brands),
         "leads_in_spaces": int((company_rows["rank_in_space"] == 1).sum()),
@@ -433,8 +429,10 @@ def cipla_portfolio(context: AnalysisContext) -> dict[str, Any]:
         .sort_values("value_t2", ascending=False)
     )
     brands["growth_pct"] = (
-        (brands["value_t2"] / brands["value_t1"].where(brands["value_t1"] > 0) - 1.0) * 100.0
-    ).fillna(0.0).round(2)
+        ((brands["value_t2"] / brands["value_t1"].where(brands["value_t1"] > 0) - 1.0) * 100.0)
+        .fillna(0.0)
+        .round(2)
+    )
 
     franchises = (
         focal.groupby("brand_root", as_index=False)
@@ -443,9 +441,16 @@ def cipla_portfolio(context: AnalysisContext) -> dict[str, Any]:
         .head(12)
     )
     franchises["growth_pct"] = (
-        (franchises["value_t2"] / franchises["value_t1"].where(franchises["value_t1"] > 0) - 1.0)
-        * 100.0
-    ).fillna(0.0).round(2)
+        (
+            (
+                franchises["value_t2"] / franchises["value_t1"].where(franchises["value_t1"] > 0)
+                - 1.0
+            )
+            * 100.0
+        )
+        .fillna(0.0)
+        .round(2)
+    )
 
     # Where Cipla is strong, and whether that strength sits in a growing space.
     positions = context.scored[context.scored["level"] == "sub_segment"].sort_values(
@@ -481,9 +486,7 @@ def cipla_portfolio(context: AnalysisContext) -> dict[str, Any]:
         "market_growth_pct": round(context.totals["market_yoy"] * 100.0, 2),
         "sku_count": int(len(focal)),
         "brand_count": int(focal["BRANDS"].nunique()),
-        "umbrella_franchises": _round_frame(
-            franchises[["brand_root", "value_t2", "growth_pct"]]
-        ),
+        "umbrella_franchises": _round_frame(franchises[["brand_root", "value_t2", "growth_pct"]]),
         "brands_by_sub_segment": _round_frame(brands.head(15)),
         "sub_segment_positions": _percentify(_round_frame(position_view)),
         "molecules_marketed": molecules,
@@ -569,8 +572,7 @@ def sensitivity_analysis(
     )
     robust = result.stability[result.stability["top_k_frequency"] >= 0.80]
     fragile = result.stability[
-        (result.stability["baseline_rank"] <= top_k)
-        & (result.stability["top_k_frequency"] < 0.60)
+        (result.stability["baseline_rank"] <= top_k) & (result.stability["top_k_frequency"] < 0.60)
     ]
     return {
         "level": level,
@@ -875,7 +877,12 @@ def build_tool_specs(context: AnalysisContext) -> dict[str, ToolSpec]:
                 "type": "object",
                 "properties": {
                     "sql": {"type": "string", "description": "A single SELECT or WITH statement."},
-                    "limit": {"type": "integer", "minimum": 1, "maximum": MAX_SQL_ROWS, "default": 50},
+                    "limit": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": MAX_SQL_ROWS,
+                        "default": 50,
+                    },
                 },
                 "required": ["sql"],
             },

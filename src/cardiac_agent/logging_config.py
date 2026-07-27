@@ -11,6 +11,7 @@ from __future__ import annotations
 import logging
 import sys
 import uuid
+from collections.abc import MutableMapping
 from contextvars import ContextVar
 from typing import Any
 
@@ -24,7 +25,14 @@ trace_id_var: ContextVar[str] = ContextVar("trace_id", default="-")
 _CONFIGURED = False
 
 
-def _inject_trace_id(_logger: Any, _method: str, event_dict: dict) -> dict:
+def _inject_trace_id(
+    _logger: Any, _method: str, event_dict: MutableMapping[str, Any]
+) -> MutableMapping[str, Any]:
+    """Stamp every line with the id of the run that produced it.
+
+    structlog types a processor's event dict as a MutableMapping rather than a
+    dict, so annotating it as dict makes this an invalid processor.
+    """
     event_dict.setdefault("trace_id", trace_id_var.get())
     return event_dict
 

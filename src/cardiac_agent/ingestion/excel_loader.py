@@ -155,7 +155,9 @@ def load_glossary(path: Path | None = None) -> pd.DataFrame:
             # do carry guidance ("MAT CP should be used to understand real
             # demand growth"). Keep them as definitions with a synthetic term.
             if full_form or definition:
-                records.append({"term": "Guidance", "full_form": "", "definition": full_form or definition})
+                records.append(
+                    {"term": "Guidance", "full_form": "", "definition": full_form or definition}
+                )
             continue
         records.append({"term": term, "full_form": full_form, "definition": definition})
 

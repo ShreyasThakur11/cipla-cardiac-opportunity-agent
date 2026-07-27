@@ -39,7 +39,9 @@ def _safe_ratio(numerator: pd.Series, denominator: pd.Series) -> pd.Series:
 
 def _growth(later: pd.Series, earlier: pd.Series) -> pd.Series:
     """Period-on-period growth, clipped to a plausible band."""
-    return (_safe_ratio(later, earlier) - 1.0).where(earlier.abs() > EPSILON, 0.0).clip(*GROWTH_CLIP)
+    return (
+        (_safe_ratio(later, earlier) - 1.0).where(earlier.abs() > EPSILON, 0.0).clip(*GROWTH_CLIP)
+    )
 
 
 def _cagr(later: pd.Series, earlier: pd.Series, years: float) -> pd.Series:
@@ -88,9 +90,11 @@ def add_growth_metrics(spaces: pd.DataFrame, *, months_per_period: int = 12) -> 
     # why the dataset ships December, January and February separately.
     annualised = out["recent_3m_sales"].astype(float) * (months_per_period / 3.0)
     out["run_rate_annualised"] = annualised
-    out["momentum"] = (_safe_ratio(annualised, out["value_t2"]) - 1.0).where(
-        out["value_t2"].abs() > EPSILON, 0.0
-    ).clip(-0.9, 1.5)
+    out["momentum"] = (
+        (_safe_ratio(annualised, out["value_t2"]) - 1.0)
+        .where(out["value_t2"].abs() > EPSILON, 0.0)
+        .clip(-0.9, 1.5)
+    )
 
     # --- Realised price ---------------------------------------------------
     out["price_per_unit_t2"] = _safe_ratio(out["value_t2"], out["qty_t2"])
@@ -110,9 +114,9 @@ def add_growth_metrics(spaces: pd.DataFrame, *, months_per_period: int = 12) -> 
 
     # --- Convenience shares ----------------------------------------------
     segment_total = out.loc[out["level"] == "segment", "value_t2"].sum()
-    out["share_of_cardiac_pct"] = _safe_ratio(
-        out["value_t2"], pd.Series(segment_total, index=out.index)
-    ) * 100.0
+    out["share_of_cardiac_pct"] = (
+        _safe_ratio(out["value_t2"], pd.Series(segment_total, index=out.index)) * 100.0
+    )
 
     return out
 
