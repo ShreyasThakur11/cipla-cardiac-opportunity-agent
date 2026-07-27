@@ -1,5 +1,7 @@
 # Cardiac Opportunity Agent
 
+[![Licence: MIT](https://img.shields.io/badge/licence-MIT-lightgrey.svg)](LICENSE)
+
 An AI agent that reads the India Cardiac prescription audit, fuses it with a
 cited corpus of external signals, and ranks the opportunity spaces where Cipla
 has a sustainable right to win over the next three to five years.
@@ -221,3 +223,6 @@ input that produced it.
 ## Licence
 
 MIT, covering the source code only. See [LICENSE](LICENSE).
+
+The dataset, the case document and every figure derived from them stay under
+the organisers' terms. [NOTICE](NOTICE) sets out the boundary.

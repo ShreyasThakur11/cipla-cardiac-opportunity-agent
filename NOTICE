@@ -1,0 +1,26 @@
+NOTICE
+
+The MIT licence in LICENSE covers the source code in this repository and
+nothing else.
+
+THE DATASET AND THE CASE DOCUMENT
+
+The Cardiac market dataset and the case study document supplied with Ascend
+Season 4 are the property of the competition organisers. They are not
+distributed with this repository, they are excluded from version control, and
+they are not licensed under these terms. Obtain them from the organisers.
+
+The build records a SHA-256 of the workbook it read, so any published figure
+can be tied back to the input that produced it without the input itself being
+present here.
+
+DERIVED FIGURES
+
+Charts, scorecards and the presentation decks in this repository are derived
+from that dataset. They are included because they are the submission. They
+carry the organisers' restrictions, not the MIT licence.
+
+THIRD-PARTY DEPENDENCIES
+
+Runtime and development dependencies are listed in requirements.txt and
+requirements-dev.txt. Each remains under its own licence.
