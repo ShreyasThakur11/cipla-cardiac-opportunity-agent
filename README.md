@@ -4,7 +4,6 @@
 
 [![CI](https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent/actions/workflows/ci.yml)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-lightgrey.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10%2B-lightgrey.svg)](pyproject.toml)
 
 </div>
 
