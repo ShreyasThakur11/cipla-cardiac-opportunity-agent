@@ -21,6 +21,26 @@ if str(PROJECT_ROOT / "src") not in sys.path:
 from cardiac_agent.config import get_framework, get_settings  # noqa: E402
 
 
+def pytest_collection_modifyitems(config, items):
+    """Make ``requires_data`` actually skip when the warehouse is absent.
+
+    The marker used to be declarative. A test that reached the warehouse
+    through the ``real_context`` fixture skipped, because that fixture checks,
+    but anything reaching it another way ran regardless. The API tests build a
+    client that serves 503 without a warehouse, so on a fresh clone, and in CI
+    where the licensed workbook cannot exist, they failed rather than skipped.
+    """
+    if get_settings().warehouse_path.exists():
+        return
+
+    skip_no_data = pytest.mark.skip(
+        reason="Warehouse not built; run `cardiac-agent build` first."
+    )
+    for item in items:
+        if "requires_data" in item.keywords:
+            item.add_marker(skip_no_data)
+
+
 @pytest.fixture(scope="session")
 def framework():
     return get_framework()
