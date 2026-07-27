@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cardiac-opportunity-agent"
+version = "1.0.0"
+description = "AI agent that prioritises opportunity spaces in the India Cardiac market where Cipla has a sustainable right to win."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Ascend Season 4 submission" }]
+keywords = ["pharma", "cardiac", "generative-ai", "agent", "rag", "market-prioritisation"]
+
+[project.scripts]
+cardiac-agent = "cardiac_agent.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+cardiac_agent = ["agent/prompts/*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q --strict-markers"
+markers = [
+    "requires_data: test needs the Cardiac workbook present in data/raw/",
+    "requires_llm: test performs a live LLM call and needs an API key",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# FastAPI's Depends() and Typer's Option() are designed to be called in
+# argument defaults. B008 exists for mutable defaults, which these are not.
+"src/cardiac_agent/api/main.py" = ["B008"]
+"src/cardiac_agent/cli.py" = ["B008"]
+# Inches() returns an immutable length, so a call in a default is not the
+# mutable-default hazard B008 guards against.
+"scripts/build_deck.py" = ["B008"]
+"scripts/check_deck.py" = ["B008"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+warn_unused_ignores = true

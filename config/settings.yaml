@@ -1,0 +1,161 @@
+# ===========================================================================
+# Prioritisation framework configuration.
+#
+# Everything the scoring engine does is driven by this file. Changing a weight
+# here changes the answer; nothing is hard-coded in Python. That is deliberate:
+# a jury can challenge an assumption, we edit one number, and re-run.
+# ===========================================================================
+
+market:
+  # Column labels in the source workbook, mapped to the periods they represent.
+  # Kept in config so the same engine works when the organisers refresh the data.
+  periods:
+    value:
+      t0: "MAT FEB'24"
+      t1: "MAT FEB'25"
+      t2: "MAT FEB'26"
+    constant_price:
+      t0: "MAT CP FEB'24"
+      t1: "MAT CP FEB'25"
+      t2: "MAT CP FEB'26"
+    quantity:
+      t0: "QTY MAT FEB'24"
+      t1: "QTY MAT FEB'25"
+      t2: "QTY MAT FEB'26"
+    monthly_sales: ["Sales 'DEC'25", "Sales 'JAN'26", "Sales 'FEB'26"]
+    price_to_retailer: ["PR_DEC'25", "PR_JAN'26", "PR_FEB'26"]
+
+  # Latest MAT ends February 2026; the forecast horizon runs to February 2031.
+  as_of: "2026-02"
+  currency_unit: "INR crore"
+  quantity_unit: "packs / units (thousands, as supplied)"
+
+  # The company string that identifies Cipla in the COMPANY column.
+  focal_company: "CIPLA*"
+  focal_company_label: "Cipla"
+
+  # Spaces smaller than this are excluded from ranking. Below roughly one
+  # hundred crore a win cannot move a company of Cipla's size, and tiny bases
+  # produce unstable growth percentages.
+  min_space_value_cr: 100.0
+
+  # Spaces with fewer than this many competitors are treated as structurally
+  # closed (single-brand or originator-held) and flagged rather than ranked.
+  min_players: 3
+
+forecast:
+  horizon_years: 5
+  # Growth mean-reverts towards the therapy-area rate. `decay` is the annual
+  # fraction of the excess over market growth that survives into the next year.
+  growth_decay: 0.72
+  # Cap on the annualised rate any single space is allowed to be projected at,
+  # so an explosive small base cannot dominate the ranking.
+  max_projected_cagr: 0.45
+  min_projected_cagr: -0.15
+  # Bull / bear cases shift the projected CAGR by this many percentage points.
+  scenario_spread_pp: 4.0
+
+scoring:
+  # ---- Pillar weights (must sum to 1.0) --------------------------------
+  # Market Opportunity Index: how attractive the space is, ignoring Cipla.
+  moi_weights:
+    market_attractiveness: 0.34
+    future_potential: 0.40
+    competitive_headroom: 0.26
+
+  # ---- Metric weights inside each pillar (each block sums to 1.0) -------
+  market_attractiveness:
+    size_cr: 0.45            # MAT Feb'26 value
+    absolute_growth_cr: 0.35 # value added between MAT Feb'25 and MAT Feb'26
+    value_cagr: 0.20         # 2-year value CAGR
+
+  future_potential:
+    real_growth: 0.30        # constant-price growth: demand, not price
+    volume_growth: 0.25      # QTY MAT growth: actual consumption
+    momentum: 0.20           # last-3-month run rate vs MAT
+    external_trend: 0.25     # RAG-derived trend multiplier
+
+  competitive_headroom:
+    # All inverted: a lower raw value is a better score.
+    hhi: 0.35                # concentration
+    leader_share: 0.25       # top-1 share
+    crowding: 0.15           # players per 100 crore of market
+    price_erosion: 0.25      # negative price effect = value destruction
+
+  right_to_win:
+    current_share: 0.22          # Cipla share of the space today
+    share_momentum: 0.22         # Cipla growth minus market growth
+    molecule_adjacency: 0.20     # does Cipla already sell the anchor molecule
+    brand_franchise: 0.18        # is there an umbrella brand to extend
+    detailing_adjacency: 0.10    # already calling on the same prescriber pool
+    formulation_fit: 0.08        # oral solids = Cipla's manufacturing base
+
+  # ---- Right-to-win gate -----------------------------------------------
+  # Cipla Priority Score = MOI * gate(RTW). The gate is deliberately steep:
+  # an attractive space Cipla cannot win is not a priority, it is a distraction.
+  rtw_gate:
+    floor: 0.35    # multiplier applied at RTW = 0
+    ceiling: 1.00  # multiplier applied at RTW = 100
+    curve: 1.35    # >1 punishes weak right-to-win harder than linear
+
+  # Percentile winsorisation before normalising, to stop a single outlier
+  # compressing every other score into the bottom of the range.
+  winsorise:
+    lower_pct: 2.0
+    upper_pct: 98.0
+
+  # Bands used when the agent narrates a score.
+  bands:
+    high: 70.0
+    medium: 45.0
+
+sensitivity:
+  # Weights are re-drawn from a Dirichlet distribution centred on the
+  # configured values. `concentration` controls how tightly: higher is tighter.
+  iterations: 500
+  concentration: 40.0
+  random_seed: 20260808
+  top_k: 5
+
+rag:
+  chunk_tokens: 320
+  chunk_overlap_tokens: 60
+  top_k: 6
+  # Reciprocal-rank-fusion constant. 60 is the value from the original paper.
+  rrf_k: 60
+  # A signal only modulates a space's future-potential score if the retrieval
+  # score clears this bar, so a weak keyword match cannot move the ranking.
+  link_min_score: 0.15
+  # Bounds on the external trend multiplier, so secondary research can tilt
+  # the view but never override what the dataset actually shows.
+  trend_multiplier_min: 0.80
+  trend_multiplier_max: 1.25
+
+guardrails:
+  # A number in the narrative must match a number in the evidence pack to
+  # within this relative tolerance, else the answer is rejected and rewritten.
+  numeric_tolerance: 0.02
+  # Numbers below this are ignored by the grounding check (years, list indices,
+  # single-digit counts) to avoid false positives on incidental figures.
+  numeric_ignore_below: 3.0
+  max_verification_retries: 1
+  # Every claim sourced from outside the dataset must carry a [S-xx] citation.
+  require_citations_for_external_claims: true
+
+agent:
+  max_tool_iterations: 8
+  memory_turns: 12
+  # Tools the planner is allowed to call. Removing a name here removes the
+  # capability at runtime without touching code.
+  enabled_tools:
+    - market_overview
+    - rank_opportunity_spaces
+    - space_deep_dive
+    - compare_spaces
+    - competitor_profile
+    - cipla_portfolio
+    - whitespace_scan
+    - forecast_space
+    - sensitivity_analysis
+    - retrieve_external_signals
+    - sql_query

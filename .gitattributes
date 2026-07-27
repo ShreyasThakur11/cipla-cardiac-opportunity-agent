@@ -1,0 +1,19 @@
+# Normalise line endings so the repository is identical regardless of the
+# platform it was committed from.
+* text=auto eol=lf
+
+# Binary assets must never be normalised.
+*.png binary
+*.pptx binary
+*.xlsx binary
+*.duckdb binary
+*.parquet binary
+*.ico binary
+*.jpg binary
+
+# SVG is text, but treat it as an asset so diffs stay collapsed in reviews.
+*.svg -diff
+
+# Keep Windows scripts usable on Windows.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
