@@ -12,6 +12,7 @@ Integrated Trend Analytics*.
 **[Documentation](https://shreyasthakur11.github.io/cipla-cardiac-opportunity-agent/)**
 · [Case answers](docs/case-answers.md)
 · [Framework](docs/PRIORITIZATION_FRAMEWORK.md)
+· [Architecture](docs/ARCHITECTURE.md)
 · [Decks](deliverables/)
 
 <br>
@@ -28,6 +29,10 @@ pack. Anything untraceable is rejected and rewritten.
 Two consequences. The scorecard is reproducible byte for byte. And the system
 answers correctly with no API key, because the numbers were never the model's
 job.
+
+No analytical constant is hard-coded. Every weight, threshold and forecast
+assumption lives in `config/settings.yaml`, so a challenge to any assumption is
+answered by editing one number and re-running.
 
 <br>
 
@@ -82,54 +87,9 @@ cardiac-agent sensitivity --level sub_segment          # rank stability
 cardiac-agent export                                   # CSV and JSON for the deck
 ```
 
-The console has five tabs following the case questions. The API separates the
-two costs: `POST /agent/ask` runs the reasoning loop and spends tokens;
-`/analytics/*` returns the same analysis in milliseconds for free. Interactive
-schema at `/docs`.
-
-<br>
-
-## The agent
-
-```
-scope ──▶ plan ──▶ gather ──▶ synthesize ──▶ verify ──▶ finalise
-  │                                             │
-  └── refuse, out of scope                      └── rewrite once, then fall back
-```
-
-Eleven tools, each a thin wrapper over the analytics engine. None accepts a
-free-text instruction that could change a calculation, and none returns prose:
-
-`market_overview` · `rank_opportunity_spaces` · `space_deep_dive` ·
-`compare_spaces` · `competitor_profile` · `cipla_portfolio` ·
-`whitespace_scan` · `forecast_space` · `sensitivity_analysis` ·
-`retrieve_external_signals` · `sql_query`
-
-Four guardrails: scope control before any tool runs, numeric grounding and
-citation validation on the draft, injection neutralisation on retrieved text.
-
-An explicit state machine rather than LangGraph, for reasons set out in
-[Architecture](docs/ARCHITECTURE.md).
-
-<br>
-
-## Opportunity spaces
-
-The case defines a space loosely, so the agent builds every reading of it and
-scores them on a common footing.
-
-| Level | What it is | Scored |
-| --- | --- | ---: |
-| `segment` | Anti-Hypertensives, Lipid Regulators, Anti-Angina | 3 |
-| `sub_segment` | ARBs, Statins Comb., AHT Triple / Poly Comb. | 14 |
-| `molecule_class` | ATC-4 class | 13 |
-| `molecule_combination` | ATC-5 molecule or FDC, the launch-decision level | 45 |
-| `treatment_archetype` | Monotherapy, Dual FDC, Triple-or-Poly FDC | 7 |
-| `anchor_molecule` | Every pack containing an ingredient, plain or combined | 26 |
-
-Anchor spaces overlap the others deliberately. A Cilnidipine + Telmisartan pack
-counts towards both franchises, which exposes clusters no reporting hierarchy
-shows. They are ranked separately for that reason.
+`POST /agent/ask` runs the reasoning loop and spends tokens. `/analytics/*`
+returns the same analysis in milliseconds for nothing. Interactive schema at
+`/docs`.
 
 <br>
 
@@ -141,18 +101,16 @@ Golden question set                     Other gates
 pass rate          100.0%  (14/14)      150 tests passing
 groundedness       100.0%               ruff clean
 tool recall        100.0%               deck geometry clean
-citation validity  100.0%
+citation validity  100.0%               house style clean
 content coverage   100.0%
 refusal accuracy   100.0%
 median latency        74 ms
 ```
 
-The golden set covers all four case questions plus the failure modes this system
+The golden set covers all four case questions and the failure modes this system
 exists to prevent, including a trap question about a high-growth,
-originator-held space.
-
-Nothing is scored by another language model. Every measure is a deterministic
-assertion against the run.
+originator-held space. Nothing is scored by another language model. Every
+measure is a deterministic assertion against the run.
 
 ```bash
 pytest                            # 150 tests
@@ -160,54 +118,6 @@ python evaluation/run_eval.py     # golden set
 python scripts/check_deck.py      # slide geometry
 python scripts/check_prose.py     # house style across every text file
 ```
-
-<br>
-
-## Layout
-
-```
-config/settings.yaml       every weight, threshold and forecast assumption
-data/external/signals/     14 cited external signals, one file each
-data/raw/                  the workbook (not committed)
-src/cardiac_agent/
-  ingestion/               workbook to typed DuckDB warehouse
-  analytics/               metrics, competition, right to win, scoring,
-                           forecasting, sensitivity, whitespace
-  rag/                     corpus, hybrid retrieval, signal-to-space linking
-  agent/                   graph, nodes, tools, prompts, memory, LLM layer
-  guardrails/              scope, numeric grounding, citations, injection
-  api/ · ui/ · cli.py      delivery surfaces
-scripts/                   chart and deck builders, layout and style checks
-evaluation/                golden questions and metrics
-tests/                     150 tests
-docs/                      the published documentation site
-deliverables/              the two presentation decks
-```
-
-No analytical constant is hard-coded. Every weight, threshold and forecast
-assumption lives in `config/settings.yaml`, so a jury challenge is answered by
-editing one number and re-running.
-
-<br>
-
-## Documentation
-
-| | |
-| --- | --- |
-| [Case answers](docs/case-answers.md) | The four case questions, answered with figures |
-| [Prioritisation framework](docs/PRIORITIZATION_FRAMEWORK.md) | Every metric, weight and formula |
-| [Architecture](docs/ARCHITECTURE.md) | Components, data flow, technology decisions |
-| [Chart gallery](docs/visuals.md) | Every figure, and what it shows |
-| [Installation](docs/INSTALLATION.md) | Setup, Docker, troubleshooting |
-| [User guide](docs/USER_GUIDE.md) | CLI, console and API walkthroughs |
-| [Technical reference](docs/TECHNICAL_DOCUMENTATION.md) | Modules and extension points |
-| [Data dictionary](docs/DATA_DICTIONARY.md) | Source columns, derived fields, tables |
-| [Assumptions](docs/ASSUMPTIONS.md) | Every judgement call, with its reasoning |
-| [Limitations](docs/LIMITATIONS.md) | What this cannot tell you |
-| [Evaluation](docs/EVALUATION.md) · [Testing](docs/TESTING.md) | Method and results |
-| [Deployment](docs/DEPLOYMENT.md) · [Security](docs/SECURITY.md) | Running it, and the threat model |
-| [Slide storyboard](docs/slide-storyboard.md) | What goes on each slide, and why |
-| [Appendix of sources](docs/appendix-sources.md) | Every external source |
 
 <br>
 
@@ -222,7 +132,6 @@ input that produced it.
 
 ## Licence
 
-MIT, covering the source code only. See [LICENSE](LICENSE).
-
-The dataset, the case document and every figure derived from them stay under
-the organisers' terms. [NOTICE](NOTICE) sets out the boundary.
+MIT, covering the source code only. See [LICENSE](LICENSE). The dataset and
+everything derived from it stay under the organisers' terms, which
+[NOTICE](NOTICE) sets out.

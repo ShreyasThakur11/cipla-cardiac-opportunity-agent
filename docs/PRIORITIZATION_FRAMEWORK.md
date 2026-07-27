@@ -12,6 +12,36 @@ one value and re-running.
 
 ---
 
+## What counts as a space
+
+The case does not define an opportunity space precisely, and the honest reading
+is that it means different things at different altitudes. Rather than choose one
+and defend it, the agent builds all six and scores them on a common footing.
+That is 108 spaces in total.
+
+| Level | What one space is | Scored |
+| --- | --- | ---: |
+| `segment` | Anti-Hypertensives, Lipid Regulators, Anti-Angina | 3 |
+| `sub_segment` | ARBs, Statins Comb., AHT Triple / Poly Comb. | 14 |
+| `molecule_class` | An ATC-4 class | 13 |
+| `molecule_combination` | An ATC-5 molecule or fixed-dose combination | 45 |
+| `treatment_archetype` | Monotherapy, Dual FDC, Triple-or-Poly FDC | 7 |
+| `anchor_molecule` | Every pack containing an ingredient, alone or combined | 26 |
+
+`molecule_combination` is the level at which a launch decision is actually
+taken, so it carries most of the weight in the recommendation.
+
+`anchor_molecule` deliberately overlaps the others. A Cilnidipine and
+Telmisartan pack counts towards both the Cilnidipine and the Telmisartan
+franchise, which exposes clusters no reporting hierarchy shows. Because those
+spaces double-count by construction, they are ranked separately and never
+summed with the rest.
+
+Scores are only ever compared within a level. See
+[Normalisation](#normalisation) for why.
+
+---
+
 ## Two scores, not one
 
 The case asks two questions that a single blended score would quietly merge:

@@ -166,6 +166,26 @@ free-text instruction that could change a calculation, and none returns prose.
 The union of their results is the complete set of figures the agent may state,
 which is the property that makes the numeric guardrail enforceable.
 
+| Tool | Returns | Arguments |
+| --- | --- | --- |
+| `market_overview` | Size, growth and structure of the whole market, and Cipla's standing in it | none |
+| `rank_opportunity_spaces` | One level ranked, on either score | `level`, `top_n`, `rank_by`, `min_value_cr` |
+| `space_deep_dive` | The full evidence card for one space | `space`, `level` |
+| `compare_spaces` | Spaces side by side, surfacing the trade-off between them | `spaces`, `level` |
+| `competitor_profile` | Where a named rival is strong: value, share, growth, brands | `company` |
+| `cipla_portfolio` | Cipla's estate: franchises, brands by sub-segment, molecules held | none |
+| `whitespace_scan` | Spaces where Cipla is below fair share but has a route in | `levels`, `limit` |
+| `forecast_space` | Three to five years forward, with base, bull and bear cases | `space`, `level`, `horizon_years` |
+| `sensitivity_analysis` | How often each space holds its top-K place under randomised weights | `level`, `top_k`, `iterations` |
+| `retrieve_external_signals` | Citable passages from the signal corpus, with identifiers | `query`, `top_k` |
+| `sql_query` | Raw rows, for questions the others do not cover | `sql`, `limit` |
+
+Arguments are enumerations, identifiers or numbers. The two that take free text
+use it to search or to look something up, never to alter a computation:
+`retrieve_external_signals` matches it against the corpus, and `sql_query` runs
+on a read-only connection that rejects anything other than a `SELECT` or a
+`WITH`, so a generated statement cannot write.
+
 **Why not LangGraph.** The graph abstraction is right for this problem; the
 dependency is not. LangGraph would bring LangChain's transitive tree into a
 project whose entire model surface is one `messages.create` call, add a
