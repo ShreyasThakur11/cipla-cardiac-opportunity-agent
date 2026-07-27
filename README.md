@@ -53,39 +53,90 @@ space from being recommended.
 
 <br>
 
-## Quick start
+## Run it
+
+Each block is one step. Use the copy button on the block, paste into a
+terminal, press enter. Python 3.10 or newer is the only prerequisite.
+
+**1. Get the code**
 
 ```bash
 git clone https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent.git
 cd cipla-cardiac-opportunity-agent
+```
 
-python -m venv .venv && .venv\Scripts\activate     # macOS/Linux: source .venv/bin/activate
+**2. Create an environment and install**
+
+Windows:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
 pip install -e .
 ```
 
-Copy the workbook to `data/raw/cardiac_dataset.xlsx`. It is licensed material
-and stays out of version control; see [`data/raw/README.md`](data/raw/README.md).
+macOS or Linux:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+**3. Add the data**
+
+Copy the competition workbook to `data/raw/cardiac_dataset.xlsx`. It is
+licensed material, so it is not in this repository and must never be committed;
+see [`data/raw/README.md`](data/raw/README.md).
+
+**4. Build the warehouse and check the installation**
 
 ```bash
 cardiac-agent build
 cardiac-agent doctor
-cardiac-agent ask "Which two or three opportunity spaces should Cipla prioritise?"
 ```
 
-No API key required. For narrated answers, copy `.env.example` to `.env` and set
-`ANTHROPIC_API_KEY`.
+`doctor` ends with `All checks passed.` when everything is in place.
+
+**5. Open the console**
+
+```bash
+streamlit run src/cardiac_agent/ui/streamlit_app.py
+```
+
+The browser opens at `localhost:8501` with five tabs following the case
+questions: the market, the ranking, whitespace, forecasts and a free-form Ask
+tab.
+
+No API key is required at any step. Without one, every answer is rendered
+deterministically and every number is identical. For narrated prose, copy
+`.env.example` to `.env` and set `ANTHROPIC_API_KEY`.
 
 <br>
 
-## Interfaces
+## Ask from the terminal
+
+The same analysis without the console:
 
 ```bash
-streamlit run src/cardiac_agent/ui/streamlit_app.py   # presentation console
-cardiac-agent serve                                    # REST API on :8000
-cardiac-agent rank --level molecule_combination        # scorecard
-cardiac-agent whitespace                               # underpenetrated spaces
-cardiac-agent sensitivity --level sub_segment          # rank stability
+cardiac-agent ask "Which two or three opportunity spaces should Cipla prioritise?"
 ```
+
+```bash
+cardiac-agent rank --level molecule_combination
+```
+
+```bash
+cardiac-agent whitespace
+```
+
+```bash
+cardiac-agent sensitivity --level sub_segment
+```
+
+`cardiac-agent serve` runs the REST API on port 8000, with the interactive
+schema at `/docs`. The [user guide](docs/USER_GUIDE.md) covers every command
+and flag.
 
 <br>
 
