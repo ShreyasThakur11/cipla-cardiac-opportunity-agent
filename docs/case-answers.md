@@ -216,7 +216,7 @@ answer starts there: **Cipla has no right to win by scale anywhere in this
 market.** What it has is adjacency, and the framework measures it directly.
 
 **In statin combinations.** Molecule adjacency is 99.4 per cent, meaning Cipla
-already markets essentially every active ingredient the sub-segment is built
+already markets nearly every active ingredient the sub-segment is built
 on. It has ROSULIP and ATORLIP as extendable umbrella brands, and it is growing
 15.1 per cent against USV's 17.2 per cent and Lupin's 25.5 per cent. It is not
 winning, but it is competing. Right-to-win score 74.3, the highest of any
@@ -399,7 +399,7 @@ configured values and the market re-scored 500 times.
 
 ![Rank stability across 500 randomised weightings](assets/sensitivity.svg)
 
-The two priority recommendations survive essentially any reasonable weighting.
+The two priority recommendations survive any reasonable weighting.
 The fourth and fifth entries on the top-five list do not, and are presented as
 candidates rather than conclusions.
 

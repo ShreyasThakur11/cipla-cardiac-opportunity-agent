@@ -1,0 +1,101 @@
+// Overrides layered on top of just-the-docs. This file is imported last by the
+// theme, so plain rules here win without touching the theme's own variables.
+//
+// Scope is deliberately narrow: make the generated charts and the wider tables
+// behave on a small screen, and carry the palette used by the charts into the
+// site so the two do not look like separate projects.
+
+$ink: #1c2733;
+$priority: #1f6f6b;
+$caution: #b4552d;
+$rule: #e3e7ea;
+
+// --- Figures ---------------------------------------------------------------
+// Charts are exported at a fixed size for the deck. On the site they have to
+// scale down to the column, and on a phone to the screen.
+.main-content {
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem auto;
+  }
+
+  // Charts read better with a defined edge against the page.
+  img[src$=".svg"],
+  img[src$=".png"] {
+    border: 1px solid $rule;
+    border-radius: 4px;
+    background: #fff;
+    padding: 0.5rem;
+  }
+
+  // A wide table scrolls inside its own box. The page itself must never
+  // scroll sideways.
+  table {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+// --- Palette ---------------------------------------------------------------
+.main-content a {
+  color: $priority;
+}
+
+.site-title:hover {
+  background-image: none;
+}
+
+.main-content h1,
+.main-content h2 {
+  color: $ink;
+}
+
+// Used in the docs to mark a caution or a caveat.
+.main-content blockquote {
+  border-left: 3px solid $caution;
+  padding-left: 1rem;
+  margin-left: 0;
+}
+
+// --- Reading comfort -------------------------------------------------------
+.main-content {
+  p,
+  li {
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 50rem) {
+  .main-content {
+    img {
+      margin: 1rem auto;
+    }
+
+    // Long command lines should scroll rather than force the page wider.
+    pre.highlight {
+      overflow-x: auto;
+    }
+  }
+}
+
+// --- Print -----------------------------------------------------------------
+// The docs get printed for the panel. Drop the chrome and keep the content.
+@media print {
+  .side-bar,
+  .main-header,
+  .back-to-top {
+    display: none !important;
+  }
+
+  .main {
+    margin-left: 0 !important;
+  }
+
+  .main-content {
+    max-width: 100% !important;
+  }
+}

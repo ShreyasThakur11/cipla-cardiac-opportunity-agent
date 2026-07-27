@@ -1,5 +1,5 @@
 ---
-title: Appendix: sources
+title: "Appendix: sources"
 layout: default
 nav_order: 4
 ---

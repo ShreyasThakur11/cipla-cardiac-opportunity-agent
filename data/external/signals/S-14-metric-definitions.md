@@ -16,8 +16,8 @@ applies_to:
 
 # The organisers' own metric definitions
 
-The glossary supplied with the dataset defines the measures and, importantly,
-tells us how they are meant to be used together.
+The glossary supplied with the dataset defines the measures, and it also sets
+out how they are meant to be used together.
 
 | Term | Meaning |
 | --- | --- |

@@ -1,7 +1,7 @@
 # Shortcuts for the common tasks. `make help` lists them.
 
 .DEFAULT_GOAL := help
-.PHONY: help install install-dev build doctor test eval lint format serve console export clean
+.PHONY: help install install-dev build doctor test eval lint format check visuals deck serve console export clean
 
 PYTHON ?= python
 
@@ -36,6 +36,16 @@ lint: ## Check style and types
 format: ## Apply formatting fixes
 	$(PYTHON) -m ruff check --fix src tests evaluation
 	$(PYTHON) -m ruff format src tests evaluation
+
+check: ## Check slide geometry and prose style
+	$(PYTHON) scripts/check_deck.py
+	$(PYTHON) scripts/check_prose.py
+
+visuals: ## Regenerate the charts into docs/assets
+	$(PYTHON) scripts/build_visuals.py
+
+deck: ## Rebuild both presentation decks
+	$(PYTHON) scripts/build_deck.py
 
 serve: ## Run the API on port 8000
 	cardiac-agent serve

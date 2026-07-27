@@ -1,8 +1,8 @@
 # Raw inputs (not committed)
 
 This directory holds the competition inputs. They are **deliberately excluded
-from version control** — they are licensed material supplied by the organisers
-and redistributing them would breach the terms of the case.
+from version control**, because they are licensed material supplied by the
+organisers and redistributing them would breach the terms of the case.
 
 ## What to put here
 

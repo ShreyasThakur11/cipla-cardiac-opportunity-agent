@@ -156,6 +156,7 @@ assertion against the run.
 pytest                            # 150 tests
 python evaluation/run_eval.py     # golden set
 python scripts/check_deck.py      # slide geometry
+python scripts/check_prose.py     # house style across every text file
 ```
 
 <br>
@@ -174,7 +175,7 @@ src/cardiac_agent/
   agent/                   graph, nodes, tools, prompts, memory, LLM layer
   guardrails/              scope, numeric grounding, citations, injection
   api/ · ui/ · cli.py      delivery surfaces
-scripts/                   chart, deck and layout-check builders
+scripts/                   chart and deck builders, layout and style checks
 evaluation/                golden questions and metrics
 tests/                     150 tests
 docs/                      the published documentation site

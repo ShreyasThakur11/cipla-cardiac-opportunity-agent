@@ -2,8 +2,8 @@
 
 Anthropic's Claude is the primary provider. The abstraction exists for two
 reasons that both matter in a live demonstration: a second provider can be
-swapped in without touching the agent, and - more importantly - there is a
-:class:`NullClient` that makes the whole system run with no credentials at all.
+swapped in without touching the agent, and a :class:`NullClient` makes the whole
+system run with no credentials at all.
 
 The null path is not a stub. Every number, ranking, forecast and verdict is
 produced by the deterministic analytics package; the model's only job is to

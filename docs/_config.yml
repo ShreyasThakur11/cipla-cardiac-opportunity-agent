@@ -11,11 +11,21 @@ description: >-
   An AI agent that ranks the opportunity spaces in the India Cardiac market
   where Cipla has a sustainable right to win.
 
-remote_theme: just-the-docs/just-the-docs
+# Set explicitly so `relative_url` resolves correctly on a project site. The
+# 404 page can be served from any path depth, so its links cannot be relative.
+url: https://shreyasthakur11.github.io
+baseurl: /cipla-cardiac-opportunity-agent
 
+# Pinned to a release. Tracking the theme's default branch would let an upstream
+# change break this site with no commit here to explain it.
+remote_theme: just-the-docs/just-the-docs@v0.12.0
+
+# jekyll-include-cache is required: the theme's sidebar uses `include_cached`,
+# and the build fails on an unknown tag without it.
 plugins:
   - jekyll-remote-theme
   - jekyll-seo-tag
+  - jekyll-include-cache
 
 color_scheme: light
 search_enabled: true
@@ -26,13 +36,11 @@ search:
 
 heading_anchors: true
 
+# One link to the repository, in the header. The theme's aux nav stays visible
+# at every width, so a second copy in the sidebar would only be duplication.
 aux_links:
   Repository: https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent
 aux_links_new_tab: true
-
-nav_external_links:
-  - title: Source on GitHub
-    url: https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent
 
 back_to_top: true
 back_to_top_text: Back to top

@@ -8,7 +8,8 @@ nav_order: 15
 
 ## Strategy
 
-Two layers, with different jobs.
+Two layers of tests, with different jobs, and two static checks over the
+artefacts the tests cannot reach.
 
 **Unit and integration tests** (`pytest`, 150 tests) verify the maths, the
 guardrails and the plumbing. Most run against a small synthetic market built in
@@ -19,6 +20,15 @@ cannot silently redefine what a metric means.
 
 **The golden set** (`evaluation/run_eval.py`) verifies end-to-end behaviour.
 See [EVALUATION.md](EVALUATION.html).
+
+**Slide geometry** (`scripts/check_deck.py`) measures every shape on every
+slide and reports text that overflows its box, shapes that overlap, and
+anything crossing a margin. A deck can be valid and still be unreadable, and
+nothing else in the suite looks at layout.
+
+**House style** (`scripts/check_prose.py`) reads every text file in the
+repository and rejects em dashes, emoji and a fixed list of filler vocabulary.
+The rules are stated once in that file rather than being remembered.
 
 ---
 
@@ -33,6 +43,16 @@ pytest --cov=cardiac_agent --cov-report=term-missing
 
 Tests needing the warehouse are marked `requires_data` and skip cleanly when it
 has not been built.
+
+The two static checks need the development dependencies, and both exit non-zero
+on a finding so they can sit in a hook or in CI:
+
+```bash
+pip install -r requirements-dev.txt
+make check                                # both checks
+python scripts/check_deck.py              # slide geometry only
+python scripts/check_prose.py             # house style only
+```
 
 ---
 

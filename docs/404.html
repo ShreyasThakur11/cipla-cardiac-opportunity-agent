@@ -1,0 +1,59 @@
+---
+title: Page not found
+layout: default
+permalink: /404.html
+nav_exclude: true
+search_exclude: true
+sitemap: false
+---
+
+<style>
+  .nf-code {
+    font-size: 3.5rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1c2733;
+    margin: 0 0 0.75rem;
+  }
+  .nf-lead { font-size: 1.05rem; max-width: 34rem; }
+  .nf-links { margin-top: 2rem; }
+  .nf-links h3 { margin-bottom: 0.4rem; }
+  .nf-links ul { margin-top: 0; }
+</style>
+
+<p class="nf-code">404</p>
+
+<h1>That page is not here</h1>
+
+<p class="nf-lead">
+  The address may be mistyped, or the page may have been renamed since the link
+  was written. The search box in the sidebar covers every page on this site.
+</p>
+
+<div class="nf-links">
+
+  <h3>Start here</h3>
+
+  <ul>
+    <li><a href="{{ '/' | relative_url }}">Overview</a>, what the agent does and how it is built</li>
+    <li><a href="{{ '/case-answers.html' | relative_url }}">Case answers</a>, the four questions answered with figures</li>
+    <li><a href="{{ '/visuals.html' | relative_url }}">Chart gallery</a>, every figure and what it shows</li>
+  </ul>
+
+  <h3>Reference</h3>
+
+  <ul>
+    <li><a href="{{ '/PRIORITIZATION_FRAMEWORK.html' | relative_url }}">Prioritisation framework</a>, every metric, weight and formula</li>
+    <li><a href="{{ '/ARCHITECTURE.html' | relative_url }}">Architecture</a>, components, data flow and technology decisions</li>
+    <li><a href="{{ '/INSTALLATION.html' | relative_url }}">Installation</a>, setup and troubleshooting</li>
+    <li><a href="{{ '/USER_GUIDE.html' | relative_url }}">User guide</a>, the command line, console and API</li>
+  </ul>
+
+  <h3>Elsewhere</h3>
+
+  <ul>
+    <li><a href="https://github.com/ShreyasThakur11/cipla-cardiac-opportunity-agent">Source on GitHub</a></li>
+  </ul>
+
+</div>

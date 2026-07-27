@@ -6,8 +6,9 @@ nav_order: 16
 
 # Deployment
 
-Three targets: a laptop for the presentation, a container for a shared demo,
-and a cloud service if it needs to outlive the competition.
+Four targets: a laptop for the presentation, this documentation site, a
+container for a shared demo, and a cloud service if it needs to outlive the
+competition.
 
 ---
 
@@ -37,6 +38,46 @@ Before presenting:
 If a model is configured and the network fails mid-demonstration, the agent
 falls back to the deterministic renderer and records the reason in the trace.
 The demonstration continues.
+
+---
+
+## This documentation site
+
+The site is the `docs/` folder of this repository, built by GitHub Pages with
+Jekyll. There is nothing to run locally and no build step to maintain.
+
+To publish it, in the repository settings under **Pages**, set the source to
+**Deploy from a branch**, branch `main`, folder `/docs`. The first build takes
+about a minute. The address is
+`https://<owner>.github.io/<repository>/`.
+
+Pages serves public repositories on any plan. For a private repository it needs
+a paid plan on the account that owns it, so a repository kept private on the
+free tier has to be made public before the site will publish.
+
+Four settings in `docs/_config.yml` are load-bearing:
+
+| Setting | Why it matters |
+| --- | --- |
+| `baseurl` | Must equal `/<repository>`. Wrong or missing, every theme-generated link 404s |
+| `remote_theme` | Pinned to a release. Tracking the default branch lets an upstream change break the site with no commit here to explain it |
+| `plugins` | The theme's sidebar uses `include_cached`, so `jekyll-include-cache` is required. Without it the build fails on an unknown tag |
+| `color_scheme` | Left light on purpose. The charts are exported on a white ground and invert badly |
+
+Two things break a Pages build quietly, and both are worth knowing before
+editing any page:
+
+**A colon in a front matter title.** `title: Appendix: sources` is not valid
+YAML. Quote it. The build fails for the whole site, not just that page.
+
+**Curly braces in a code sample.** Jekyll reads doubled curly braces, and a
+curly brace followed by a percent sign, as Liquid template syntax. A fenced code
+block does not protect them, because Liquid runs before Markdown. Wrap any such
+sample in Liquid's own raw and endraw tags.
+
+Build failures arrive by email to the account that pushed, and appear under the
+repository's Actions tab as `pages-build-deployment`. `docs/404.html` handles
+any address that does not resolve.
 
 ---
 
